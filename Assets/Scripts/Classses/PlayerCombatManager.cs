@@ -1,19 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerCombatManager : CombatManager
 {
     CharacterManager characterManager;
     PlayerInputManager inputManager;
-    public CharacterAnimationManager animator;
+    [HideInInspector] public CharacterAnimationManager animator;
+    public GameObject damageNumberPrefab;
 
-    public void Start() {
+    public new void Start() {
         base.Start();
         Debug.Log("Initializing PlayerCombat Manager");
-        animator = GetComponent<CharacterAnimationManager>();
         inputManager = PlayerInputManager.Instance;
         characterManager = GetComponent<CharacterManager>();
+        animator = GetComponent<CharacterAnimationManager>();
 
     }
     private void Update() {
@@ -89,5 +92,17 @@ public class PlayerCombatManager : CombatManager
 
     public virtual void UltimateAbillityLogic() {
         // Ultimate Abillity logic
+    }
+
+    public void CreateNumberPopUp(Vector3 position, string text, Color color) {
+        var popup = Instantiate(damageNumberPrefab, position, quaternion.identity);
+        var temp = popup.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+        temp.text = text;
+        temp.faceColor = color;
+
+        //Destroy Timer
+        Destroy(popup, 1f);
+
+        // Initialize objectPooling for damage numbers later on
     }
 }

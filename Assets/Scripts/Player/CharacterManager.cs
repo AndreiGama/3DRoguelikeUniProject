@@ -6,18 +6,16 @@ using UnityEngine;
 public class CharacterManager : MonoBehaviour
 {
     [HideInInspector] public Animator animator;
-    public CharacterController characterController;
+    [HideInInspector] public CharacterController characterController;
 
     public bool isPerformingAction = false;
     public bool canMove = true;
     public bool canRotate = true;
     public bool applyRootMotion = false;
     public bool canLook = true;
-    private void Awake() {
-        animator = GetComponentInChildren<Animator>();
-    }
 
     private void Start() {
+        animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>() ;
     }
     private void Update() {
