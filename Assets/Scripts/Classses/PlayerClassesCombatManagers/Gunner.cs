@@ -12,8 +12,6 @@ public class Gunner : PlayerCombatManager {
     public float maxBulletHitRange;  // Maximum distance for the raycast
     public int maxTargetsPenetrate; // Maximum number of targets to hit
 
-    private int targetsHit = 0; // Counter for the number of targets hit
-
     string PrimaryAttackAnimation = "HandgunShoot";
     string SecondaryAttackAnimation = "HandGunTrippleShoot";
     [SerializeField] LayerMask layersToHit;
@@ -26,35 +24,44 @@ public class Gunner : PlayerCombatManager {
     }
 
     public void WeaponFire() {
-        targetsHit = 0;
         Debug.Log("WeaponFire");
         if (Time.time > nextFireTime) {
-            // Set the next time a shot can be fired
-            nextFireTime = Time.time + fireRate;
-           
             RaycastHit[] hits = Physics.RaycastAll(fpsCamera.transform.position, fpsCamera.transform.forward, maxBulletHitRange, layersToHit);
 
+            // Sort the hits by distance from the ray's origin in ascending order
+            Array.Sort(hits, (hit1, hit2) => hit1.distance.CompareTo(hit2.distance));
+
+            int penetratedTargets = 0; // Initialize a counter for penetrated targets
+
             foreach (RaycastHit hit in hits) {
+                // Debug checking what objects it hit
                 Debug.Log("Hit object: " + hit.collider.gameObject.name);
-                if (targetsHit > maxTargetsPenetrate) {
-                    Debug.Log("Breaking out of for each loop");
-                    // If we've hit the maximum number of targets, break out of the loop
-                    break;
-                }
+
+                // Grabs hit object and then grabs the damagable interface
                 GameObject hitObject = hit.collider.gameObject;
                 IDamagable damagable = hitObject.GetComponent<IDamagable>();
-                if(damagable != null) {
+
+                // If the object hit has the damagable interface then do logic
+                if (damagable != null) {
+                    // Increase the variable which counts how many targets it penetrated so far
+                    penetratedTargets++;
                     Debug.Log("Damageable object hit, name is:" + hitObject.name);
+
+                    // Apply damage and then create the damage text
                     damagable.doDamage(weaponDamage());
                     CreateNumberPopUp(hitObject.transform.position, "" + weaponDamage(), Color.white);
-                    targetsHit++;
+
+                    // If we've hit the maximum number of targets, break out of the loop
+                    if (penetratedTargets >= maxTargetsPenetrate) {
+                        Debug.Log("Reached max penetrated targets, breaking out of loop");
+                        break;
+                    }
+                } else {
+                    // If the object hit has no damagable interface then continue to the next target
+                    continue;
                 }
-                else if(damagable == null) {
-                    Debug.Log("No damagable objects found: " + hitObject.name);
-                    break;
-                }
-                // Increment the targets hit counter
             }
+
         }
     }
     public override void PrimaryAttackLogic() {

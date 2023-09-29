@@ -15,4 +15,4 @@ MonoBehaviour:
   fireRate: 0.5
   nextFireTime: 0
   maxBulletHitRange: 50
-  maxTargetsPenetrate: 1
+  maxTargetsPenetrate: 2
