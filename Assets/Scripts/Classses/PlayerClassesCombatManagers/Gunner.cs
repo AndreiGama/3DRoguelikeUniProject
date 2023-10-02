@@ -67,6 +67,7 @@ public class Gunner : PlayerCombatManager {
     public override void PrimaryAttackLogic() {
         // Primary Attack Logic
         animator.PlayTargetActionAnimation(PrimaryAttackAnimation, true);
+        WeaponFire();
     }
 
     public override void SecondaryAttackLogic() {
