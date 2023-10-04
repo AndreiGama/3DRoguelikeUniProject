@@ -14,6 +14,15 @@ public class Gunner : PlayerCombatManager {
 
     string PrimaryAttackAnimation = "HandgunShoot";
     string SecondaryAttackAnimation = "HandGunTrippleShoot";
+
+    string PrimaryAttackAnimationArms = "A_Arm_Fire";
+    string PrimaryAttackAnimationWeapon = "A_Glock_Fire";
+
+    string ReloadAnimationArms = "A_Arm_Reload";
+    string ReloadAnimationWeapon = "A_Glock_Reload";
+
+    string SecondaryAttackAnimationArms;
+    string SecondaryAttackAnimationWeapon;
     [SerializeField] LayerMask layersToHit;
     private new void Start() {
         base.Start();
@@ -66,13 +75,11 @@ public class Gunner : PlayerCombatManager {
     }
     public override void PrimaryAttackLogic() {
         // Primary Attack Logic
-        animator.PlayTargetActionAnimation(PrimaryAttackAnimation, true);
-        WeaponFire();
+        animator.PlayTargetActionAnimation(PrimaryAttackAnimationArms, PrimaryAttackAnimationWeapon, true);
     }
 
     public override void SecondaryAttackLogic() {
         // Secondary Attack Logic
-        animator.PlayTargetActionAnimation(SecondaryAttackAnimation, true);
     }
 
     public override void Abillity1Logic() {

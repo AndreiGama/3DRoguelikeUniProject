@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class CharacterManager : MonoBehaviour
 {
-    [HideInInspector] public Animator animator;
+    public Animator armsAnimator;
+    public Animator weaponAnimator;
     [HideInInspector] public CharacterController characterController;
 
     public bool isPerformingAction = false;
@@ -15,7 +16,6 @@ public class CharacterManager : MonoBehaviour
     public bool canLook = true;
 
     private void Start() {
-        animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>() ;
     }
     private void Update() {

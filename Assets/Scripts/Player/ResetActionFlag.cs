@@ -17,7 +17,6 @@ public class ResetActionFlag : StateMachineBehaviour
         character.canMove = true;
         character.canRotate = true;
         character.applyRootMotion = false;
-        animator.SetInteger("PlayedAnimationCount", 0);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

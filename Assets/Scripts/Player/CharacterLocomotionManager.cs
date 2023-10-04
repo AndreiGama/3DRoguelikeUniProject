@@ -17,15 +17,18 @@ public class CharacterLocomotionManager : MonoBehaviour {
     [SerializeField] float groundDistance = 0.4f;
     [SerializeField] LayerMask groundMask; // Which layer to check for ground
     public float jumpHeight = 3f;
+    Rigidbody rb;
 
 
     private void Start() {
+        rb = GetComponent<Rigidbody>();
         inputManager = PlayerInputManager.Instance;
         characterManager = GetComponent<CharacterManager>();
         combatManager = GetComponent<PlayerCombatManager>();
     }
 
     private void FixedUpdate() {
+        isMoving();
         HandleGroundedMovement();
         Jump(); // Jump Function
     }
@@ -43,6 +46,23 @@ public class CharacterLocomotionManager : MonoBehaviour {
             // Handle gravity
             velocity.y += gravity + Time.deltaTime;
             characterManager.characterController.Move(velocity * Time.deltaTime);
+        }
+        if(inputManager.GetPlayerMovement() == Vector2.zero) {
+
+        }
+    }
+
+    void isMoving() {
+        float playerSpeedx = inputManager.GetPlayerMovement().x;
+        float playerSpeedy = inputManager.GetPlayerMovement().y;
+        float playerSpeed = playerSpeedx + playerSpeedy;
+        float walkingThreshhold = 0f;
+        if (playerSpeedx  > walkingThreshhold | playerSpeedx < walkingThreshhold | playerSpeedy > walkingThreshhold | playerSpeedy < walkingThreshhold) {
+            characterManager.armsAnimator.SetBool("isMoving", true);
+            characterManager.weaponAnimator.SetBool("isMoving", true);
+        } else if (playerSpeed == 0) {
+            characterManager.armsAnimator.SetBool("isMoving", false);
+            characterManager.weaponAnimator.SetBool("isMoving", false) ;
         }
     }
     
