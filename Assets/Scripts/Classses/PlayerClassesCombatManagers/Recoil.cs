@@ -11,11 +11,7 @@ public class Recoil : MonoBehaviour
 
     public float snapiness, returnAmount;
     [SerializeField] Transform cam;
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
+    
     private void Update() {
         targetRotation = Vector3.Lerp(targetRotation, Vector3.zero, Time.deltaTime * returnAmount);
         currentRotation = Vector3.Slerp(currentRotation, targetRotation, Time.fixedDeltaTime * snapiness);
