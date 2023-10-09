@@ -1993,6 +1993,7 @@ GameObject:
   - component: {fileID: 321111719}
   - component: {fileID: 321111718}
   - component: {fileID: 321111724}
+  - component: {fileID: 321111726}
   m_Layer: 7
   m_Name: GunnerPlayer
   m_TagString: Player
@@ -2212,8 +2213,7 @@ MonoBehaviour:
   layersToHit:
     serializedVersion: 2
     m_Bits: 256
-  recoilAmount: 15
-  RecoilTime: 0.2
+  _recoil: {fileID: 321111726}
 --- !u!54 &321111725
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2241,6 +2241,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &321111726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321111714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d48ace20cb413cc4893db67f2b3bed01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recoilX: -15
+  recoilY: 2
+  recoilZ: 2
+  snapiness: 5
+  returnAmount: 8
+  cam: {fileID: 1730883922}
 --- !u!1 &362363430
 GameObject:
   m_ObjectHideFlags: 0
@@ -4366,8 +4384,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1170481272}
-  - {fileID: 945112251}
-  - {fileID: 1301469511}
   m_Father: {fileID: 1730883922}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!81 &618161056
@@ -6099,7 +6115,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 618161054}
+    m_TransformParent: {fileID: 1730883922}
     m_Modifications:
     - target: {fileID: -8966500745990341066, guid: 4c306928ffb0af043b117fba3b9bf674,
         type: 3}
@@ -7899,12 +7915,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1301469507}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 618161054}
+  m_Father: {fileID: 1730883922}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &1433920033
 Mesh:
@@ -9115,6 +9131,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 618161054}
+  - {fileID: 945112251}
+  - {fileID: 1301469511}
   m_Father: {fileID: 321111715}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1766237834

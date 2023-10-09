@@ -26,8 +26,7 @@ public class Gunner : PlayerCombatManager {
     string SecondaryAttackAnimationWeapon;
     [SerializeField] LayerMask layersToHit;
 
-    [SerializeField] float recoilAmount;
-    [SerializeField] float RecoilTime;
+    [SerializeField] Recoil _recoil;
     private new void Start() {
         base.Start();
         fireRate = gunData.fireRate;
@@ -39,7 +38,7 @@ public class Gunner : PlayerCombatManager {
     public void WeaponFire() {
         Debug.Log("WeaponFire");
         if (Time.time > nextFireTime) {
-            StartCoroutine(recoil());
+            _recoil.recoil();
 
             RaycastHit[] hits = Physics.RaycastAll(fpsCamera.transform.position, fpsCamera.transform.forward, maxBulletHitRange, layersToHit);
 
@@ -80,30 +79,32 @@ public class Gunner : PlayerCombatManager {
         }
     }
 
-    IEnumerator recoil() {
-        Vector3 ogCameraPosition = fpsCamera.transform.localRotation.eulerAngles;
-        Vector3 recoiledCamera = new Vector3(fpsCamera.transform.localRotation.eulerAngles.x - recoilAmount, fpsCamera.transform.localRotation.eulerAngles.y, fpsCamera.transform.localRotation.eulerAngles.z);
-        //= Quaternion.Euler(Vector3.Lerp(fpsCamera.transform.localRotation.eulerAngles, recoiledCamera, RecoilTime));
+    //IEnumerator recoil() {
+    //    Vector3 ogCameraPosition = fpsCamera.transform.localRotation.eulerAngles;
+    //    Vector3 recoiledCamera = new Vector3(fpsCamera.transform.localRotation.eulerAngles.x - recoilAmount, fpsCamera.transform.localRotation.eulerAngles.y, fpsCamera.transform.localRotation.eulerAngles.z);
+    //    //= Quaternion.Euler(Vector3.Lerp(fpsCamera.transform.localRotation.eulerAngles, recoiledCamera, RecoilTime));
 
-        float counter = 0;
-        while ( counter < RecoilTime)
-        {
-            counter += Time.deltaTime;
-            fpsCamera.transform.localEulerAngles = Vector3.Lerp(recoiledCamera, ogCameraPosition, counter / RecoilTime);
+    //    float counter = 0;
+    //    while ( counter < RecoilTime)
+    //    {
+    //        counter += Time.deltaTime;
+    //        fpsCamera.transform.localEulerAngles = Vector3.Lerp(recoiledCamera, ogCameraPosition, counter / RecoilTime);
 
-            yield return new WaitForEndOfFrame();
+    //        yield return new WaitForEndOfFrame();
 
-        }
-        while (counter >= 0) {
-            counter -= Time.deltaTime;
-            fpsCamera.transform.localEulerAngles = Vector3.Lerp(recoiledCamera, ogCameraPosition, counter / RecoilTime);
+    //    }
+    //    while (counter >= 0) {
+    //        counter -= Time.deltaTime;
+    //        fpsCamera.transform.localEulerAngles = Vector3.Lerp(recoiledCamera, ogCameraPosition, counter / RecoilTime);
 
-            yield return new WaitForEndOfFrame();
+    //        yield return new WaitForEndOfFrame();
 
-        }
+    //    }
 
-    }
+    //}
+    
 
+    
     public override void PrimaryAttackLogic() {
         // Primary Attack Logic
         animator.PlayTargetActionAnimation(PrimaryAttackAnimationArms, PrimaryAttackAnimationWeapon, true);
