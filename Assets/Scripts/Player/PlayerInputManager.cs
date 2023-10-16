@@ -99,4 +99,8 @@ public class PlayerInputManager : MonoBehaviour {
     public bool hasReloadTriggered() {
         return playerControls.Player.Reload.triggered;
     }
+
+    public bool hasPlayerInteracted() {
+        return playerControls.Player.Interact.triggered;
+    }
 }

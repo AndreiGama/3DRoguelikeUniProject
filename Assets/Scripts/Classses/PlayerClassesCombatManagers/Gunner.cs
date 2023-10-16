@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class Gunner : PlayerCombatManager {
-    public Camera fpsCamera;
+    
     [SerializeField] GunWeaponData gunData;
     public float fireRate;  // Rate of fire in seconds
     private float nextFireTime;  // Time when the next shot can be fired
@@ -62,8 +62,8 @@ public class Gunner : PlayerCombatManager {
                     Debug.Log("Damageable object hit, name is:" + hitObject.name);
 
                     // Apply damage and then create the damage text
-                    damagable.doDamage(weaponDamage());
-                    CreateNumberPopUp(hitObject.transform.position, "" + weaponDamage(), Color.white);
+                    damagable.doDamage(basePrimaryDamage);
+                    CreateNumberPopUp(hitObject.transform.position, "" + basePrimaryDamage, Color.white);
 
                     // If we've hit the maximum number of targets, break out of the loop
                     if (penetratedTargets >= maxTargetsPenetrate) {
@@ -120,9 +120,5 @@ public class Gunner : PlayerCombatManager {
 
     public override void Abillity2Logic() {
         // Second Abillity logic
-    }
-
-    public override void UltimateAbillityLogic() {
-        // Ultimate Abillity logic
     }
 }

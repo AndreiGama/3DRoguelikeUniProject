@@ -42,7 +42,7 @@ public class CharacterLocomotionManager : MonoBehaviour {
             // grabs imput from player, then moves
             Vector2 playerInput = inputManager.GetPlayerMovement();
             Vector3 Move = transform.right * playerInput.x + transform.forward * playerInput.y;
-            characterManager.characterController.Move(Move * combatManager.movementSpeed * Time.deltaTime);
+            characterManager.characterController.Move(Move * combatManager.baseMovementSpeed * Time.deltaTime);
             // Handle gravity
             velocity.y += gravity + Time.deltaTime;
             characterManager.characterController.Move(velocity * Time.deltaTime);

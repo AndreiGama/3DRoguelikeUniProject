@@ -16,12 +16,13 @@ public class AICombatManager : CombatManager
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
-    private void Update() {
+    private new void Update() {
         if (canAttackPlayer() && !isAttacking) {
             StartCoroutine(Attack());
         } else if(!isAttacking){
                 Chase();
         }
+        base.Update();
     }
 
     bool canAttackPlayer() {
@@ -44,7 +45,7 @@ public class AICombatManager : CombatManager
         yield return new WaitForSeconds(1f);
         if(canAttackPlayer()) {
             isAttacking = false;
-            doDamage(weaponDamage());
+            doDamage(PrimaryDamageCalculate(basePrimaryDamage));
             Debug.Log("Player is in range, do damage");
         }
         else { 

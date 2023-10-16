@@ -6,21 +6,26 @@ using UnityEngine;
 
 public class PlayerCombatManager : CombatManager
 {
+    public Camera fpsCamera;
     CharacterManager characterManager;
     PlayerInputManager inputManager;
     [HideInInspector] public CharacterAnimationManager animator;
     public GameObject damageNumberPrefab;
-
+    public List<ItemList> items = new List<ItemList>();
     public new void Start() {
+        StartCoroutine(CallItemUpdate());
         base.Start();
         Debug.Log("Initializing PlayerCombat Manager");
         inputManager = PlayerInputManager.Instance;
         characterManager = GetComponent<CharacterManager>();
         animator = GetComponent<CharacterAnimationManager>();
+        
 
     }
-    private void Update() {
+    private new void Update() {
+        // base.Update();
         HandleAllAttacks();
+        Interact();
     }
 
     void HandleAllAttacks() {
@@ -39,10 +44,6 @@ public class PlayerCombatManager : CombatManager
         //Ability2
         if (inputManager.hasAbility2Triggered()) { 
             Abillity2();
-        }
-        //Ultimate Ability
-        if(inputManager.hasUltimateAbilityTriggered()) {
-            UltimateAbility();
         }
         
     }
@@ -84,16 +85,6 @@ public class PlayerCombatManager : CombatManager
         // Second Abillity logic
     }
 
-    public virtual void UltimateAbility() {
-        if (!characterManager.isPerformingAction) {
-            UltimateAbillityLogic();
-        }
-    }
-
-    public virtual void UltimateAbillityLogic() {
-        // Ultimate Abillity logic
-    }
-
     public void CreateNumberPopUp(Vector3 position, string text, Color color) {
         var popup = Instantiate(damageNumberPrefab, position, quaternion.identity);
         var temp = popup.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
@@ -104,5 +95,30 @@ public class PlayerCombatManager : CombatManager
         Destroy(popup, 1f);
 
         // Initialize objectPooling for damage numbers later on
+    }
+
+    IEnumerator CallItemUpdate() {
+        foreach(ItemList i in items){
+            i.item.Update(this, i.stacks);
+        }
+        yield return new WaitForSeconds(1);
+        StartCoroutine(CallItemUpdate());
+    }
+
+    void Interact() {
+        if (inputManager.hasPlayerInteracted()) {
+            RaycastHit[] hits = Physics.RaycastAll(fpsCamera.transform.position, fpsCamera.transform.forward, 20f);
+            foreach (RaycastHit hit in hits) {
+                IInteract interactObject = hit.collider.GetComponent<IInteract>();
+                Debug.Log("Looking for IInteractScript");
+                if (interactObject != null) {
+                    Debug.Log("Interacting");
+                    interactObject.Interact();
+                } else {
+                    Debug.Log("Not interactable");
+                }
+            }
+        }
+        
     }
 }
