@@ -27,6 +27,9 @@ public class Gunner : PlayerCombatManager {
     [SerializeField] LayerMask layersToHit;
 
     [SerializeField] Recoil _recoil;
+
+    [SerializeField] GameObject grenadeGameObject;
+    [SerializeField] Transform projectileTransform;
     private new void Start() {
         base.Start();
         fireRate = gunData.fireRate;
@@ -111,6 +114,7 @@ public class Gunner : PlayerCombatManager {
     }
 
     public override void SecondaryAttackLogic() {
+        Instantiate(grenadeGameObject, projectileTransform.position, fpsCamera.transform.rotation);
         // Secondary Attack Logic
     }
 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2393,6 +2393,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _recoil: {fileID: 321111726}
+  grenadeGameObject: {fileID: 3478547928800094584, guid: 34ba2cff4dff03442bb43c473d3e557c,
+    type: 3}
+  projectileTransform: {fileID: 1544367961}
 --- !u!54 &321111725
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4596,6 +4599,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1170481272}
+  - {fileID: 1544367961}
   m_Father: {fileID: 1730883922}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!81 &618161056
@@ -8829,6 +8833,37 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &1544367960
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1544367961}
+  m_Layer: 7
+  m_Name: projectileSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1544367961
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544367960}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.27200103, y: 0, z: 0.2710005}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 618161054}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1564945563
 GameObject:
   m_ObjectHideFlags: 0
