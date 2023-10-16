@@ -12,6 +12,7 @@ public class CombatManager : MonoBehaviour, IDamagable {
     [Space(10)]
     [Header("CharacterStats")]
     [HideInInspector] public string characterName;
+    [HideInInspector] public int baseHealth;
     public int health;
     [HideInInspector] public int baseArmor;
     public int armor;
@@ -43,7 +44,6 @@ public class CombatManager : MonoBehaviour, IDamagable {
         Debug.Log("Initializing Stats");
         LoadBaseStats();
         LoadWeaponStats();
-
         baseMaxHealth = health;
         baseMaxShield = baseShield;
     }
@@ -73,10 +73,15 @@ public class CombatManager : MonoBehaviour, IDamagable {
 
     private void LoadBaseStats() {
         characterName = characterStats.characterName;
-        health = characterStats.health;
+        baseHealth = characterStats.health;
         baseArmor = characterStats.armor;
         baseMovementSpeed = characterStats.movementSpeed;
         baseShield = characterStats.shield;
+
+        health = baseHealth;
+        armor = baseArmor;
+        movementSpeed = baseMovementSpeed;
+        shield = baseShield;
     }
     public void doDamage(int dmgAmount) {
         if (baseShield > 0) {

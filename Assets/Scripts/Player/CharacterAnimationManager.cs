@@ -9,7 +9,7 @@ public class CharacterAnimationManager : MonoBehaviour {
     private void Start() {
         character = GetComponent<CharacterManager>();
     }
-    public void PlayTargetActionAnimation(string targetArmsAnimation, string targetWeaponAnimation, bool isPerformingAction, bool applyRootMotion = true, bool canRotate = true, bool canMove = true, bool canLook = true) {
+    public void PlayTargetActionAnimation(string targetArmsAnimation, string targetWeaponAnimation, bool isPerformingAction, float AnimatorSpeed = 1f,bool applyRootMotion = true, bool canRotate = true, bool canMove = true, bool canLook = true) {
         /* Default settings when the command gets run >
         string targetAnimation,
         bool isPerformingAction,
@@ -17,7 +17,8 @@ public class CharacterAnimationManager : MonoBehaviour {
         bool canRotate = false,
         bool canMove = false
         canLook = true */
-
+        character.armsAnimator.speed = 1;
+        character.weaponAnimator.speed = 1;
         character.armsAnimator.applyRootMotion = applyRootMotion;
         character.armsAnimator.CrossFade(targetArmsAnimation, 0.2f);
         character.weaponAnimator.applyRootMotion = applyRootMotion;
