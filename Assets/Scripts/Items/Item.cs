@@ -62,6 +62,7 @@ public class PoisonCloudCrystal : Item {
         return "Create a cloud of poison around the player which damages enemies who enter for 5 damage per stack every second";
     }
 
+    // Create poisonCloud script and add a reference to it and call doDamage from there.
     public override void CreateVFX(PlayerCombatManager player) {
         if (effect == null) effect = (GameObject)Resources.Load("ItemEffects/VFXCrystalPoisonCloud", typeof(GameObject));
         GameObject poisonCloud = GameObject.Instantiate(effect, player.transform.position, Quaternion.Euler(Vector3.zero));
@@ -89,8 +90,8 @@ public class SpeedCrystal : Item {
     }
 
     public override void OnStatChange(PlayerCombatManager player, int stacks) {
-        player.movementSpeedAmplifier += stacks / 10;
-        player.attackSpeedAmplifier += stacks / 10;
+        player.movementSpeedAmplifier = player.baseAplifierValue + stacks / 10f;
+        player.attackSpeedAmplifier = player.baseAplifierValue + stacks / 10f;
         player.AmplifyStats();
     }
 }
@@ -105,9 +106,10 @@ public class DeffenseCrystal : Item {
     }
 
     public override void OnStatChange(PlayerCombatManager player, int stacks) {
-        player.healthAmplifier += stacks / 10;
-        player.shieldAmplifier += stacks / 10;
-        player.armorAmplifier += stacks / 10;
+        Debug.Log("Stats are being adjusted");
+        player.healthAmplifier = player.baseAplifierValue + stacks / 10f;
+        player.shieldAmplifier = player.baseAplifierValue + stacks / 10f;
+        player.armorAmplifier = player.baseAplifierValue + stacks / 10f;
         player.AmplifyStats();
     }
 }
@@ -122,8 +124,8 @@ public class PowerCrystal : Item {
     }
 
     public override void OnStatChange(PlayerCombatManager player, int stacks) {
-        player.abilityDamageAmplifier += stacks / 10;
-        player.abilityDamageAmplifier += stacks / 10;
+        player.abilityDamageAmplifier = player.baseAplifierValue + stacks / 10f;
+        player.abilityDamageAmplifier = player.baseAplifierValue + stacks / 10f;
     }
 }
 

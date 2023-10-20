@@ -6,6 +6,7 @@ using UnityEngine;
 public class ItemPickup : MonoBehaviour {
     public Item item;
     public Items itemDrop;
+    public bool itemChangeStats;
 
     private void Start() {
         // Depending on the item from the enumerator selected assigned the variable Item to values of the actual item
@@ -17,6 +18,11 @@ public class ItemPickup : MonoBehaviour {
         PlayerCombatManager player = other.GetComponent<PlayerCombatManager>();
         if(player != null) { 
             AddItem(player);
+            Debug.Log("Can item change stats: " + itemChangeStats);
+            if(itemChangeStats) {
+                Debug.Log("Item pickup can change stats");
+                player.CallStatUpdateOnItemPickup();
+            }
             Destroy(this.gameObject);
         }
     }

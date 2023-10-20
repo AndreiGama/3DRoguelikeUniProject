@@ -68,6 +68,11 @@ PrefabInstance:
       propertyPath: itemDrop
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7327998547422376179, guid: e68b12e8de9cdaf499e0094223488b0b,
+        type: 3}
+      propertyPath: itemChangeStats
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8412531016793091911, guid: e68b12e8de9cdaf499e0094223488b0b,
         type: 3}
       propertyPath: m_Name

@@ -31,6 +31,7 @@ public class CombatManager : MonoBehaviour, IDamagable {
     [HideInInspector] public WeaponType weaponType;
     [Space(10)]
     [Header("Amplifiers")]
+    public float baseAplifierValue = 1f;
     public float abilityDamageAmplifier = 1f;
     public float primaryDamageAmplifier = 1f;
     public float healingAmplifier = 1f;

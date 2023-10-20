@@ -22,6 +22,13 @@ public class PlayerCombatManager : CombatManager
         
 
     }
+
+    public void CallStatUpdateOnItemPickup() {
+        foreach (ItemList i in items) {
+            i.item.OnStatChange(this, i.stacks);
+        }
+    }
+
     private new void Update() {
         // base.Update();
         HandleAllAttacks();
@@ -104,6 +111,10 @@ public class PlayerCombatManager : CombatManager
         yield return new WaitForSeconds(1);
         StartCoroutine(CallItemUpdate());
     }
+    
+    
+    
+    
 
     void Interact() {
         if (inputManager.hasPlayerInteracted()) {
