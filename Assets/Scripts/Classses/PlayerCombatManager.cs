@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -119,12 +120,15 @@ public class PlayerCombatManager : CombatManager
     void Interact() {
         if (inputManager.hasPlayerInteracted()) {
             RaycastHit[] hits = Physics.RaycastAll(fpsCamera.transform.position, fpsCamera.transform.forward, 20f);
+            Array.Sort(hits, (hit1, hit2) => hit1.distance.CompareTo(hit2.distance));
+            
             foreach (RaycastHit hit in hits) {
                 IInteract interactObject = hit.collider.GetComponent<IInteract>();
                 Debug.Log("Looking for IInteractScript");
                 if (interactObject != null) {
                     Debug.Log("Interacting");
                     interactObject.Interact();
+                    break;
                 } else {
                     Debug.Log("Not interactable");
                 }
