@@ -32,7 +32,6 @@ public class GateScript : MonoBehaviour, IInteract
     {
         if (!isOpen)
         {
-            parentScript.playerTrigger = true;
             isOpen = true;
             DoorHandle();
         }
