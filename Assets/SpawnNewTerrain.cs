@@ -9,12 +9,12 @@ public class SpawnNewTerrain : MonoBehaviour {
     public GameObject terrainHolder;
     [SerializeField] GameObject[] arenaGameobjectIterations;
     [SerializeField] GameObject deadEndArena;
-
+    [SerializeField] LayerMask terrainLayers;
     [SerializeField] int maxArenasToPlace = 5;
     [SerializeField] GameObject[] arena;
     [SerializeField] List<GameObject> spawnPoints = new List<GameObject>();
 
-    private void Awake() {
+    private void Start() {
         // Initialize arena array with a size.
         arena = new GameObject[maxArenasToPlace];
 
@@ -25,7 +25,6 @@ public class SpawnNewTerrain : MonoBehaviour {
                 Debug.Log("arena placed 0");
                 arena[arenasPlaced] = Instantiate(arenaGameobjectIterations[Random.Range(0, arenaGameobjectIterations.Length)], Vector3.zero, Quaternion.identity, terrainHolder.transform);
                 Debug.Log("Arena number: " +  arenasPlaced + " spawned");
-                detectSpawnpoints(arena[arenasPlaced]);
                  
                 foreach (GameObject spawnpoint in spawnPoints) {
                     arenasPlaced++;
@@ -37,7 +36,7 @@ public class SpawnNewTerrain : MonoBehaviour {
                 for (int i = arenasPlaced; i <= maxArenasToPlace; i++) {
                     if (arena[i] != null) {
                         
-                        detectSpawnpoints(arena[i].gameObject);
+                        checkSlotValidity(arena[i].transform);
                         Debug.Log("Detecing spawnpoints for arena: " + i);
                     }
                     else if (arena[i] == null) {
@@ -55,7 +54,7 @@ public class SpawnNewTerrain : MonoBehaviour {
                 spawnPoints.Clear();
                 for (int i = arenasPlaced; i <= maxArenasToPlace; i++) {
                     if (arena[i] != null) {
-                        detectSpawnpoints(arena[i].gameObject);
+                        checkSlotValidity(arena[i].transform);
                         Debug.Log("Detecing spawnpoints for arena: " + i);
                     } else if (arena[i] == null) {
                         break;
@@ -65,19 +64,31 @@ public class SpawnNewTerrain : MonoBehaviour {
         }
     }
 
-    void detectSpawnpoints(GameObject spawnPointParent) {
-        GameObject temp = spawnPointParent.transform.Find("Spawnpoints").gameObject;
-        for (int i = 0; i < temp.transform.childCount; i++) {
-                spawnPoints.Add(temp.transform.GetChild(i).gameObject);
+    //void detectSpawnpoints(Transform spawnPointParent) {
+    //    Transform temp = spawnPointParent.Find("Spawnpoints");
+    //    for (int i = 0; i < temp.childCount; i++) {
+    //        Debug.Log("child" + temp.GetChild(i).name);
+    //        spawnPoints.Add(temp.GetChild(i).gameObject);
+    //    }
+    //}
+
+    void checkSlotValidity(Transform spawnPoint) {
+        Transform spawnPoints = spawnPoint.Find("Spawnpoints");
+        for(int i = 0; i < spawnPoints.childCount; i++) {
+            GameObject child = spawnPoints.GetChild(i).gameObject;
+            Vector3 localPos = new Vector3(25, 1, 25);
+            Vector3 worldPos = child.transform.TransformPoint(localPos);
+            if (Physics.CheckSphere(worldPos, 3f, terrainLayers, QueryTriggerInteraction.Collide)) {
+                Debug.Log("Spot taken");
+                Debug.Log(child.name);
+                Destroy(child);
+            } else {
+                this.spawnPoints.Add(child); // this line freezes editor it ?????????????????????
+                Debug.Log("Empty spot");
+
+            }
         }
+        //detectSpawnpoints(spawnPoint);
     }
-
-    //GameObject[] spawnPoints = new GameObject[spawnPointsTransform.childCount];
-    //            for (int i = 0; i<spawnPointsTransform.childCount; i++) {
-    //                spawnPoints[i] = spawnPointsTransform.GetChild(i).gameObject;
-
-    //// Rebuild the NavMesh after all terrain is spawned.
-    //navMeshSurface.BuildNavMesh();
-
 }
 
