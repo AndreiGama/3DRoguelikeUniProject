@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
-using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 public class SpawnNewTerrain : MonoBehaviour {
@@ -46,11 +45,17 @@ public class SpawnNewTerrain : MonoBehaviour {
             }
             else{
                 Debug.Log("Arenas placed hiher than = 0 is: " + arenasPlaced);
-                foreach (GameObject spawnpoint in spawnPoints) {
-                    arenasPlaced++;
-                    arena[arenasPlaced] = Instantiate(arenaGameobjectIterations[Random.Range(0, arenaGameobjectIterations.Length)], spawnpoint.transform.position, spawnpoint.transform.rotation, terrainHolder.transform);
-                    Debug.Log("Arena number: " + arenasPlaced + " spawned");
+                if(spawnPoints.Count > 0) {
+                    foreach (GameObject spawnpoint in spawnPoints) {
+                        arenasPlaced++;
+                        arena[arenasPlaced] = Instantiate(arenaGameobjectIterations[Random.Range(0, arenaGameobjectIterations.Length)], spawnpoint.transform.position, spawnpoint.transform.rotation, terrainHolder.transform);
+                        Debug.Log("Arena number: " + arenasPlaced + " spawned");
+                    }
+                } else {
+                    arenasPlaced = maxArenasToPlace;
+                    break;
                 }
+                
                 spawnPoints.Clear();
                 for (int i = arenasPlaced; i <= maxArenasToPlace; i++) {
                     if (arena[i] != null) {
@@ -64,7 +69,7 @@ public class SpawnNewTerrain : MonoBehaviour {
         }
     }
 
-    //void detectSpawnpoints(Transform spawnPointParent) {
+    //void checkSlotValidity(Transform spawnPointParent) {
     //    Transform temp = spawnPointParent.Find("Spawnpoints");
     //    for (int i = 0; i < temp.childCount; i++) {
     //        Debug.Log("child" + temp.GetChild(i).name);
@@ -73,22 +78,32 @@ public class SpawnNewTerrain : MonoBehaviour {
     //}
 
     void checkSlotValidity(Transform spawnpointSlot) {
-        Transform spawnpointsT = spawnpointSlot.Find("Spawnpoints");
-        for(int i = 0; i < spawnpointsT.childCount; i++) {
-            GameObject child = spawnpointsT.GetChild(i).gameObject;
-            Vector3 localPos = new Vector3(25, 1, 25);
-            Vector3 worldPos = child.transform.TransformPoint(localPos);
-            if (Physics.CheckSphere(worldPos, 3f, terrainLayers, QueryTriggerInteraction.Collide)) {
-                Debug.Log("Spot taken");
-                Debug.Log(child.name);
-                Destroy(child);
+        Transform temp = spawnpointSlot.Find("Spawnpoints");
+        for (int i = 0; i < temp.childCount; i++) {
+            Debug.Log("child" + temp.GetChild(i).name);
+            Vector3 localPos = new Vector3(25, 0, 25);
+            Vector3 worldPos = temp.GetChild(i).transform.TransformPoint(localPos);
+            Collider[] overlappedObject = Physics.OverlapSphere(worldPos, 3f, terrainLayers);
+            if (overlappedObject.Length == 0 ) {
+                spawnPoints.Add(temp.GetChild(i).gameObject);
             } else {
-                spawnPoints.Add(child);
-                Debug.Log("Empty spot");
+                Debug.Log("Spot taken");
+            } // Infinite loop where?
+        }
+            //Vector3 localPos = new Vector3(25, 1, 25);
+            //Vector3 worldPos = child.transform.TransformPoint(localPos);
+            //if (Physics.CheckSphere(worldPos, 3f, terrainLayers, QueryTriggerInteraction.Collide)) {
+            //    Debug.Log("Spot taken");
+            //    Debug.Log(child.name);
+            //} else {
+            //    validChildren.Add(child);
+            //    Debug.Log("Empty spot");
 
-            }
-        } // this frezes the function when it can't find any spawnpoints to add
-        //detectSpawnpoints(spawnPoint);
-    }
-}
+            //}
+
+
+            // this frezes the function when it can't find any spawnpoints to add
+            //detectSpawnpoints(spawnPoint);
+        }
+}   
 
