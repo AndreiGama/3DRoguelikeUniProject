@@ -72,10 +72,10 @@ public class SpawnNewTerrain : MonoBehaviour {
     //    }
     //}
 
-    void checkSlotValidity(Transform spawnPoint) {
-        Transform spawnPoints = spawnPoint.Find("Spawnpoints");
-        for(int i = 0; i < spawnPoints.childCount; i++) {
-            GameObject child = spawnPoints.GetChild(i).gameObject;
+    void checkSlotValidity(Transform spawnpointSlot) {
+        Transform spawnpointsT = spawnpointSlot.Find("Spawnpoints");
+        for(int i = 0; i < spawnpointsT.childCount; i++) {
+            GameObject child = spawnpointsT.GetChild(i).gameObject;
             Vector3 localPos = new Vector3(25, 1, 25);
             Vector3 worldPos = child.transform.TransformPoint(localPos);
             if (Physics.CheckSphere(worldPos, 3f, terrainLayers, QueryTriggerInteraction.Collide)) {
@@ -83,11 +83,11 @@ public class SpawnNewTerrain : MonoBehaviour {
                 Debug.Log(child.name);
                 Destroy(child);
             } else {
-                this.spawnPoints.Add(child); // this line freezes editor it ?????????????????????
+                spawnPoints.Add(child);
                 Debug.Log("Empty spot");
 
             }
-        }
+        } // this frezes the function when it can't find any spawnpoints to add
         //detectSpawnpoints(spawnPoint);
     }
 }
