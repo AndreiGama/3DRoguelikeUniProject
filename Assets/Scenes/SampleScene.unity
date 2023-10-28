@@ -132,8 +132,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9664264}
-  - component: {fileID: 9664263}
-  - component: {fileID: 9664262}
   - component: {fileID: 9664261}
   - component: {fileID: 9664260}
   - component: {fileID: 9664259}
@@ -217,30 +215,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &9664262
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9664258}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ca002da428252441b92f28d83c8a65f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &9664263
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9664258}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8233d90336aea43098adf6dbabd606a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &9664264
 Transform:
   m_ObjectHideFlags: 0
@@ -1954,9 +1928,10 @@ MonoBehaviour:
   terrainLayers:
     serializedVersion: 2
     m_Bits: 1
-  maxArenasToPlace: 20
+  maxArenasToPlace: 15
   arena: []
   spawnPoints: []
+  surplusArenas: []
 --- !u!4 &954299096
 Transform:
   m_ObjectHideFlags: 0
