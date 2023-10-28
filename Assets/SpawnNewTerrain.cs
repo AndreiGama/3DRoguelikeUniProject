@@ -7,60 +7,98 @@ public class SpawnNewTerrain : MonoBehaviour {
     public NavMeshSurface navMeshSurface;
     public GameObject terrainHolder;
     [SerializeField] GameObject[] arenaGameobjectIterations;
+    [SerializeField] GameObject arena1PresetBeggining, arena2PresetBeggining, arena3PresetBeggining;
+    [SerializeField] GameObject[] arenaPresetPreventLoop;
     [SerializeField] GameObject deadEndArena;
     [SerializeField] LayerMask terrainLayers;
     [SerializeField] int maxArenasToPlace = 5;
     [SerializeField] GameObject[] arena;
     [SerializeField] List<GameObject> spawnPoints = new List<GameObject>();
-
-    private void Start() {
+    [SerializeField] List<GameObject> surplusArenas = new List<GameObject>();
+    bool activatePreventLoop;
+    bool preventLoop;
+    int count;
+    private void Awake() {
         // Initialize arena array with a size.
         arena = new GameObject[maxArenasToPlace];
-
-        Debug.Log("SpawnNewTerrainScript");
-        for(int arenasPlaced = 0; arenasPlaced <= maxArenasToPlace;) {
+        for (int arenasPlaced = 0; arenasPlaced <= maxArenasToPlace;) {
+            
             
             if (arenasPlaced == 0) {
-                Debug.Log("arena placed 0");
-                arena[arenasPlaced] = Instantiate(arenaGameobjectIterations[Random.Range(0, arenaGameobjectIterations.Length)], Vector3.zero, Quaternion.identity, terrainHolder.transform);
-                Debug.Log("Arena number: " +  arenasPlaced + " spawned");
-                 
+                arena[arenasPlaced] = Instantiate(arena1PresetBeggining, Vector3.zero, Quaternion.identity, terrainHolder.transform);
+
+                checkSlotValidity(arena[arenasPlaced].transform);
+
                 foreach (GameObject spawnpoint in spawnPoints) {
                     arenasPlaced++;
-                    arena[arenasPlaced] = Instantiate(arenaGameobjectIterations[Random.Range(0, arenaGameobjectIterations.Length)], spawnpoint.transform.position, spawnpoint.transform.rotation, terrainHolder.transform);
-                    Debug.Log("Arena number: " + arenasPlaced + " spawned");
+                    arena[arenasPlaced] = Instantiate(arena2PresetBeggining, spawnpoint.transform.position, spawnpoint.transform.rotation, terrainHolder.transform);
                 }
                 spawnPoints.Clear();
 
                 for (int i = arenasPlaced; i <= maxArenasToPlace; i++) {
                     if (arena[i] != null) {
-                        
                         checkSlotValidity(arena[i].transform);
-                        Debug.Log("Detecing spawnpoints for arena: " + i);
                     }
                     else if (arena[i] == null) {
                         break;
                     }
                 }
+
             }
             else{
-                Debug.Log("Arenas placed hiher than = 0 is: " + arenasPlaced);
+                //Checks for spawnpoints to be above 0 so it doesn't become an infinite loop
                 if(spawnPoints.Count > 0) {
+                    //Decreases count each time it loops back when it finds a possible infinite loop
+                    if (count <= 0) {
+                        preventLoop = false;
+                    } else if (preventLoop == true) {
+                        count--;
+                    }
                     foreach (GameObject spawnpoint in spawnPoints) {
                         arenasPlaced++;
-                        arena[arenasPlaced] = Instantiate(arenaGameobjectIterations[Random.Range(0, arenaGameobjectIterations.Length)], spawnpoint.transform.position, spawnpoint.transform.rotation, terrainHolder.transform);
-                        Debug.Log("Arena number: " + arenasPlaced + " spawned");
+                        // Here is where it gets randomly selected or hard selected to make sure it doesn't run into a loop
+                        GameObject arenaIterationSpawn = arenaGameobjectIterations[Random.Range(0, arenaGameobjectIterations.Length)];
+                        // If the amount of arenas will be placed + the current amount of arenas generated are over the maximum arenas to place, it will bring a dead end arena to finish the build.
+                        if (spawnPoints.Count + arenasPlaced >= maxArenasToPlace) {
+                            surplusArenas.Add(Instantiate(deadEndArena, spawnpoint.transform.position, spawnpoint.transform.rotation, terrainHolder.transform));
+                            spawnPoints.Remove(spawnpoint);
+                            if(spawnPoints.Count == 0) {
+                                arenasPlaced = maxArenasToPlace;
+                                break;
+                            }
+                        } else {
+                            if (preventLoop == true) {
+                                if (count == 2) {
+                                    arenaIterationSpawn = arenaPresetPreventLoop[0];
+                                } else if (count == 1) {
+                                    arenaIterationSpawn = arenaPresetPreventLoop[1];
+                                }
+                            }
+                            // Instantaites object at spawnpoint
+                            arena[arenasPlaced] = Instantiate(arenaIterationSpawn, spawnpoint.transform.position, spawnpoint.transform.rotation, terrainHolder.transform);
+                            // Check for infinite loop
+                            if (arenaIterationSpawn == arenaGameobjectIterations[0] || arenaIterationSpawn == arenaGameobjectIterations[1]) {
+                                activatePreventLoop = true;
+                            }
+                        }
+                        
                     }
                 } else {
+                    // Sets arena placed to maximum because otherwise it infinite loops and freezes
                     arenasPlaced = maxArenasToPlace;
                     break;
                 }
-                
+                if(activatePreventLoop) {
+                    preventLoop = true;
+                    count = 3;
+                    activatePreventLoop = false;
+                }
+                // Clears previous spawnpoints
                 spawnPoints.Clear();
-                for (int i = arenasPlaced; i <= maxArenasToPlace; i++) {
+                // Loops through the arena we placed in order to check for new spawnpoints -- credit to james for the for loop algorithm we got shown in class...
+                for (int i = arenasPlaced; i <= maxArenasToPlace + spawnPoints.Count; i++) {
                     if (arena[i] != null) {
                         checkSlotValidity(arena[i].transform);
-                        Debug.Log("Detecing spawnpoints for arena: " + i);
                     } else if (arena[i] == null) {
                         break;
                     }
@@ -69,41 +107,20 @@ public class SpawnNewTerrain : MonoBehaviour {
         }
     }
 
-    //void checkSlotValidity(Transform spawnPointParent) {
-    //    Transform temp = spawnPointParent.Find("Spawnpoints");
-    //    for (int i = 0; i < temp.childCount; i++) {
-    //        Debug.Log("child" + temp.GetChild(i).name);
-    //        spawnPoints.Add(temp.GetChild(i).gameObject);
-    //    }
-    //}
-
+    //Check if the slot the arena should spawn at is available or not
     void checkSlotValidity(Transform spawnpointSlot) {
         Transform temp = spawnpointSlot.Find("Spawnpoints");
         for (int i = 0; i < temp.childCount; i++) {
-            Debug.Log("child" + temp.GetChild(i).name);
+            //Position the check will happen at
             Vector3 localPos = new Vector3(25, 0, 25);
             Vector3 worldPos = temp.GetChild(i).transform.TransformPoint(localPos);
             Collider[] overlappedObject = Physics.OverlapSphere(worldPos, 3f, terrainLayers);
-            if (overlappedObject.Length == 0 ) {
+            if (overlappedObject.Length == 0) {
                 spawnPoints.Add(temp.GetChild(i).gameObject);
             } else {
-                Debug.Log("Spot taken");
-            } // Infinite loop where?
+                // Spot Taken
+            }
         }
-            //Vector3 localPos = new Vector3(25, 1, 25);
-            //Vector3 worldPos = child.transform.TransformPoint(localPos);
-            //if (Physics.CheckSphere(worldPos, 3f, terrainLayers, QueryTriggerInteraction.Collide)) {
-            //    Debug.Log("Spot taken");
-            //    Debug.Log(child.name);
-            //} else {
-            //    validChildren.Add(child);
-            //    Debug.Log("Empty spot");
-
-            //}
-
-
-            // this frezes the function when it can't find any spawnpoints to add
-            //detectSpawnpoints(spawnPoint);
-        }
+    }
 }   
 

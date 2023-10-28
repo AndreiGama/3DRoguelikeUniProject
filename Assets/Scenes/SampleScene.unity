@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1935,16 +1935,26 @@ MonoBehaviour:
   navMeshSurface: {fileID: 625293514}
   terrainHolder: {fileID: 1164785270}
   arenaGameobjectIterations:
-  - {fileID: 2552459688710679306, guid: a5426da3c623e294a80f334b35c83deb, type: 3}
-  - {fileID: 6885298662699342273, guid: 69dadc4abd3283946b6297eedad402c8, type: 3}
-  - {fileID: 4342992410567750053, guid: 56bf9549e2d9e28469f6c5122c62953e, type: 3}
   - {fileID: 730458185085322718, guid: 9e1265ee5f5f8944fb1b558e10667952, type: 3}
+  - {fileID: 6885298662699342273, guid: 69dadc4abd3283946b6297eedad402c8, type: 3}
+  - {fileID: 2552459688710679306, guid: a5426da3c623e294a80f334b35c83deb, type: 3}
+  - {fileID: 4342992410567750053, guid: 56bf9549e2d9e28469f6c5122c62953e, type: 3}
+  - {fileID: 4235289445884193157, guid: 57abb1afda6207f4e9d5ec33cc729b48, type: 3}
+  arena1PresetBeggining: {fileID: 4342992410567750053, guid: 56bf9549e2d9e28469f6c5122c62953e,
+    type: 3}
+  arena2PresetBeggining: {fileID: 2552459688710679306, guid: a5426da3c623e294a80f334b35c83deb,
+    type: 3}
+  arena3PresetBeggining: {fileID: 0}
+  arenaPresetPreventLoop:
+  - {fileID: 4235289445884193157, guid: 57abb1afda6207f4e9d5ec33cc729b48, type: 3}
+  - {fileID: 2552459688710679306, guid: a5426da3c623e294a80f334b35c83deb, type: 3}
+  - {fileID: 4342992410567750053, guid: 56bf9549e2d9e28469f6c5122c62953e, type: 3}
   deadEndArena: {fileID: 7700115742670175882, guid: 741dae69916bd0a45b20e8dd8f9ff243,
     type: 3}
   terrainLayers:
     serializedVersion: 2
     m_Bits: 1
-  maxArenasToPlace: 50
+  maxArenasToPlace: 20
   arena: []
   spawnPoints: []
 --- !u!4 &954299096
