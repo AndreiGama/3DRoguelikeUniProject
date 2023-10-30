@@ -120,9 +120,13 @@ public class Gunner : PlayerCombatManager {
 
     public override void Abillity1Logic() {
         // First Abilitty Logic
+        GameManager gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
+        gameManager.isInWave = true;
     }
 
     public override void Abillity2Logic() {
         // Second Abillity logic
+        GameManager gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
+        gameManager.isInWave = false;
     }
 }

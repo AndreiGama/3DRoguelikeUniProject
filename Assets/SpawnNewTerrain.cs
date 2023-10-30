@@ -13,9 +13,9 @@ public class SpawnNewTerrain : MonoBehaviour {
     [SerializeField] GameObject deadEndArena;
     [SerializeField] LayerMask terrainLayers;
     [SerializeField] int maxArenasToPlace = 5;
-    [SerializeField] GameObject[] arena;
-    [SerializeField] List<GameObject> spawnPoints = new List<GameObject>();
-    [SerializeField] List<GameObject> surplusArenas = new List<GameObject>();
+    GameObject[] arena;
+    List<GameObject> spawnPoints = new List<GameObject>();
+    List<GameObject> surplusArenas = new List<GameObject>();
     bool activatePreventLoop;
     bool preventLoop;
     int count;

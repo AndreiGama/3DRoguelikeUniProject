@@ -4,42 +4,47 @@ using UnityEngine;
 
 public class GateScript : MonoBehaviour, IInteract
 {
-    [SerializeField] SpawnNewTerrain parentScript;
+    GameManager gameManager;   
     public bool isOpen;
-    public bool isWaveInAction;
     Vector3 positionOpen;
     Vector3 positionClosed;
+    Collider collider;
     private void Start()
     {
+        collider = GetComponent<Collider>();
+        gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>() ;
         positionOpen = new Vector3(transform.position.x, transform.position.y + 1.5f, transform.position.z);
         positionClosed = transform.position;
+        StartCoroutine(DoorManager());
     }
-    public void DoorHandle()
-    {
-        
-        if (isOpen && !isWaveInAction)
-        {
-            transform.position = positionOpen;
-            Collider collider = GetComponent<Collider>();
-            collider.enabled = false;
+
+
+    IEnumerator DoorManager() {
+        yield return new WaitForSeconds(1f);
+        if (gameManager.isInWave) {
+            DoorClose();
+        } else if (!gameManager.isInWave && isOpen) {
+            doorOpen();
         }
-        else if(isOpen && isWaveInAction)
-        {
-            transform.position = positionClosed;
-        }
+        StartCoroutine(DoorManager());
     }
     public void doorOpen()
     {
-        if (!isOpen)
-        {
-            isOpen = true;
-            DoorHandle();
-        }
+        transform.position = positionOpen;
+        collider.enabled = false;
+    }
+    public void DoorClose() {
+        transform.position = positionClosed;
+        collider.enabled = false;
     }
 
     public void Interact()
     {
-        doorOpen();
+        if (!isOpen) {
+            isOpen = true;
+            doorOpen();
+        }
+
     }
 
 }
