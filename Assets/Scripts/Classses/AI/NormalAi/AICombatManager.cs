@@ -5,56 +5,28 @@ using UnityEngine.AI;
 
 public class AICombatManager : CombatManager
 {
-    public NavMeshAgent agent;
-    [SerializeField] GameObject player;
-    [SerializeField] int AttackRange;
-    [SerializeField] LayerMask playerLayer;
-    bool isAttacking;
-
+    [SerializeField] public float AttackRange;
+    [SerializeField] AIWeaponData AIWeaponData;
+    [SerializeField] public WeaponHitboxComponent meleeHitbox = null;
+    bool isMeleeHitboxActive;
     private new void Start() {
         base.Start();
-        player = GameObject.FindGameObjectWithTag("Player");
     }
-
-    private new void Update() {
-        if (canAttackPlayer() && !isAttacking) {
-            StartCoroutine(Attack());
-        } else if(!isAttacking){
-                Chase();
-        }
-        base.Update();
+    public override void LoadWeaponStats() {
+        weaponName = AIWeaponData.weaponName;
+        AttackRange = AIWeaponData.attackRange;
+        basePrimaryDamage = AIWeaponData.baseDamage;
     }
-
-    bool canAttackPlayer() {
-        if(Physics.CheckSphere(transform.position, AttackRange, playerLayer)) {
-            return true;
-        }
-        else {
-            return false;
+    public void ToggleHitbox() {
+        if(isMeleeHitboxActive) {
+            isMeleeHitboxActive = false;
+            meleeHitbox.enabled = false;
+        }else if(!isMeleeHitboxActive){
+            isMeleeHitboxActive = true;
+            meleeHitbox.enabled = true;
         }
     }
-
-    void Chase() {
-        agent.isStopped = false;
-        agent.SetDestination(player.transform.position);
-    }
-
-    IEnumerator Attack() {
-        isAttacking= true;
-        agent.isStopped = true;
-        yield return new WaitForSeconds(1f);
-        if(canAttackPlayer()) {
-            isAttacking = false;
-            doDamage(PrimaryDamageCalculate(basePrimaryDamage));
-            Debug.Log("Player is in range, do damage");
-        }
-        else { 
-            isAttacking = false;
-            Debug.Log("Player is not in range, back to chasing");
-        }
-    }
-
-    private void OnDrawGizmos() {
-        Gizmos.DrawSphere(transform.position, AttackRange);
+    public void Attack(IDamagable target) {
+        target.doDamage(PrimaryDamageCalculate(basePrimaryDamage));
     }
 }

@@ -43,40 +43,53 @@ public class Gunner : PlayerCombatManager {
         if (Time.time > nextFireTime) {
             _recoil.recoil();
 
-            RaycastHit[] hits = Physics.RaycastAll(fpsCamera.transform.position, fpsCamera.transform.forward, maxBulletHitRange, layersToHit);
+            RaycastHit[] hits = Physics.RaycastAll(fpsCamera.transform.position, fpsCamera.transform.forward, maxBulletHitRange, layersToHit, QueryTriggerInteraction.Collide);
 
             // Sort the hits by distance from the ray's origin in ascending order
             Array.Sort(hits, (hit1, hit2) => hit1.distance.CompareTo(hit2.distance));
 
             int penetratedTargets = 0; // Initialize a counter for penetrated targets
+            Transform previousHitObject = null;
 
             foreach (RaycastHit hit in hits) {
                 // Debug checking what objects it hit
                 Debug.Log("Hit object: " + hit.collider.gameObject.name);
 
-                // Grabs hit object and then grabs the damagable interface
-                GameObject hitObject = hit.collider.gameObject;
-                IDamagable damagable = hitObject.GetComponent<IDamagable>();
+                
+                Transform currentHitObject = hit.transform.root;
+                if(previousHitObject != currentHitObject) {
+                    // Grabs hit object and then grabs the damagable interface
+                    GameObject hitObject = hit.transform.gameObject;
+                    HitboxComponent hitbox = hitObject.GetComponent<HitboxComponent>();
+                    IDamagable damagable = hitbox.parentIDamagable;
+                    
+                    // If the object hit has the damagable interface then do logic
+                    if (damagable != null) {
+                        // Increase the variable which counts how many targets it penetrated so far
+                        penetratedTargets++;
+                        Debug.Log("Damageable object hit, name is:" + hitObject.name);
 
-                // If the object hit has the damagable interface then do logic
-                if (damagable != null) {
-                    // Increase the variable which counts how many targets it penetrated so far
-                    penetratedTargets++;
-                    Debug.Log("Damageable object hit, name is:" + hitObject.name);
+                        // Apply damage and then create the damage text
 
-                    // Apply damage and then create the damage text
-                    damagable.doDamage(basePrimaryDamage);
-                    CreateNumberPopUp(hitObject.transform.position, "" + basePrimaryDamage, Color.white);
+                        //Grab hitbox component to check where the player hit
+                        Debug.Log("Damage is being done");
+                        int dmgAmount = PrimaryDamageCalculate(basePrimaryDamage, true, hitbox.bodyPartString);
+                        damagable.doDamage(dmgAmount);
+                        CreateNumberPopUp(hitObject.transform.position, dmgAmount.ToString(), Color.white);
+                        previousHitObject = currentHitObject;
 
-                    // If we've hit the maximum number of targets, break out of the loop
-                    if (penetratedTargets >= maxTargetsPenetrate) {
-                        Debug.Log("Reached max penetrated targets, breaking out of loop");
-                        break;
+                        // If we've hit the maximum number of targets, break out of the loop
+                        if (penetratedTargets >= maxTargetsPenetrate) {
+                            Debug.Log("Reached max penetrated targets, breaking out of loop");
+                            break;
+                        }
+                    } else {
+                        // If the object hit has no damagable interface then continue to the next target
+                        continue;
                     }
-                } else {
-                    // If the object hit has no damagable interface then continue to the next target
-                    continue;
                 }
+                
+                
             }
 
         }

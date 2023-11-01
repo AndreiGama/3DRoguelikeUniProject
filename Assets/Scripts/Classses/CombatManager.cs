@@ -40,6 +40,7 @@ public class CombatManager : MonoBehaviour, IDamagable {
     public float shieldAmplifier = 1f;
     public float armorAmplifier = 1f;
     public float healthAmplifier = 1f;
+    public float critDamageAmplifier = 1.5f;
     // Start is called before the first frame update
     public void Start() {
         Debug.Log("Initializing Stats");
@@ -54,19 +55,46 @@ public class CombatManager : MonoBehaviour, IDamagable {
         maxShield = Mathf.FloorToInt(baseMaxShield * shieldAmplifier);
         maxHealth = Mathf.FloorToInt(baseMaxHealth * armorAmplifier);
     }
-
-    public int AbilityDamageCalculate(int AbilityDamage) {
-        return Mathf.FloorToInt(AbilityDamage * abilityDamageAmplifier);
+    bool IsHitHeadshot(string ColliderShot) {
+        if(ColliderShot == "Head") {
+            return true;
+        } else if(ColliderShot == "Body") {
+            return false;
+        } else {
+            Debug.Log("Body part not found, returning false");
+            return false;
+        }
+    }
+    public int AbilityDamageCalculate(int AbilityDamage, bool canHeadshot = false, string HitBodypartName = "") {
+        if(canHeadshot) {
+            if (IsHitHeadshot(HitBodypartName)) {
+                return Mathf.FloorToInt((AbilityDamage * critDamageAmplifier) * abilityDamageAmplifier);
+            } else {
+                return Mathf.FloorToInt(AbilityDamage * abilityDamageAmplifier);
+            }
+        } else {
+            return Mathf.FloorToInt(AbilityDamage * abilityDamageAmplifier);
+        }
+        
     }
 
-    public int PrimaryDamageCalculate(int BaseDamage) {
-        return Mathf.FloorToInt(BaseDamage * primaryDamageAmplifier);
+    public int PrimaryDamageCalculate(int BaseDamage, bool canHeadshot = false, string HitBodypartName = "") {
+        if (canHeadshot) {
+            if (IsHitHeadshot(HitBodypartName)) {
+                return Mathf.FloorToInt((BaseDamage * critDamageAmplifier) * primaryDamageAmplifier);
+            } else {
+                return Mathf.FloorToInt(BaseDamage * primaryDamageAmplifier);
+            }
+        } else {
+            return Mathf.FloorToInt(BaseDamage * primaryDamageAmplifier);
+        }
+        
     }
 
     public void Heal(int healthToAdd) {
         health = Mathf.Clamp(healthToAdd, health, maxHealth);
     }
-    private void LoadWeaponStats() {
+    public virtual void LoadWeaponStats() {
         weaponName = weaponData.weaponName;
         weaponType = weaponData.weaponType;
         basePrimaryDamage = weaponData.baseDamage;
