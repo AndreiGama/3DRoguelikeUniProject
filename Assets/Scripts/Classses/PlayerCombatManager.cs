@@ -94,7 +94,7 @@ public class PlayerCombatManager : CombatManager
     }
 
     public void CreateNumberPopUp(Vector3 position, string text, Color color) {
-        var popup = Instantiate(damageNumberPrefab, position, quaternion.identity);
+        var popup = Instantiate(damageNumberPrefab, position + Vector3.up, quaternion.identity);
         var temp = popup.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         temp.text = text;
         temp.faceColor = color;

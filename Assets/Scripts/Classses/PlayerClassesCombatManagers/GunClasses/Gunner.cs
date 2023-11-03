@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -30,6 +31,7 @@ public class Gunner : PlayerCombatManager {
 
     [SerializeField] GameObject grenadeGameObject;
     [SerializeField] Transform projectileTransform;
+    [SerializeField] GameObject VFX_BloodSplatter;
     private new void Start() {
         base.Start();
         fireRate = gunData.fireRate;
@@ -76,6 +78,7 @@ public class Gunner : PlayerCombatManager {
                         int dmgAmount = PrimaryDamageCalculate(basePrimaryDamage, true, hitbox.bodyPartString);
                         damagable.doDamage(dmgAmount);
                         CreateNumberPopUp(hitObject.transform.position, dmgAmount.ToString(), Color.white);
+                        CreateBloodSplatter(hit);
                         previousHitObject = currentHitObject;
 
                         // If we've hit the maximum number of targets, break out of the loop
@@ -93,6 +96,14 @@ public class Gunner : PlayerCombatManager {
             }
 
         }
+    }
+
+    void CreateBloodSplatter(RaycastHit hit) {
+        Vector3 incomingVector = hit.point - transform.root.position;
+        Vector3 reflectVector = Vector3.Reflect(incomingVector, hit.normal);
+
+        GameObject temp = Instantiate(VFX_BloodSplatter, hit.point, Quaternion.Euler(reflectVector));
+        GameObject.Destroy(temp, 1f);
     }
 
     //IEnumerator recoil() {

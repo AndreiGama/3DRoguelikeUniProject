@@ -19,12 +19,16 @@ public class CharacterLocomotionManager : MonoBehaviour {
     public float jumpHeight = 3f;
     Rigidbody rb;
 
+    Vector2 playerAcceleration;
+
 
     private void Start() {
         rb = GetComponent<Rigidbody>();
         inputManager = PlayerInputManager.Instance;
         characterManager = GetComponent<CharacterManager>();
         combatManager = GetComponent<PlayerCombatManager>();
+
+
     }
 
     private void FixedUpdate() {
@@ -32,7 +36,7 @@ public class CharacterLocomotionManager : MonoBehaviour {
         HandleGroundedMovement();
         Jump(); // Jump Function
     }
-    
+
     void HandleGroundedMovement() {
         if (characterManager.canMove) {
             //Resets velocity.y when grounded
@@ -41,13 +45,29 @@ public class CharacterLocomotionManager : MonoBehaviour {
             }
             // grabs imput from player, then moves
             Vector2 playerInput = inputManager.GetPlayerMovement();
-            Vector3 Move = transform.right * playerInput.x + transform.forward * playerInput.y;
+            //   Vector3 Move = transform.right * playerInput.x + transform.forward * playerInput.y;
+
+
+            playerAcceleration = playerAcceleration + (playerInput * Time.deltaTime);
+
+            if (playerInput.magnitude < 0.01f) {
+                playerAcceleration = playerAcceleration * .95f;
+            }
+
+
+            if (playerAcceleration.magnitude > 1) {
+                playerAcceleration = playerAcceleration.normalized;
+            }
+
+            // https://forum.unity.com/threads/make-character-accelerates-using-character-controller-component.848044/ acceleration / deceleration
+
+            Vector3 Move = transform.right * playerAcceleration.x + transform.forward * playerAcceleration.y;
             characterManager.characterController.Move(Move * combatManager.baseMovementSpeed * Time.deltaTime);
             // Handle gravity
             velocity.y += gravity + Time.deltaTime;
             characterManager.characterController.Move(velocity * Time.deltaTime);
         }
-        if(inputManager.GetPlayerMovement() == Vector2.zero) {
+        if (inputManager.GetPlayerMovement() == Vector2.zero) {
 
         }
     }
@@ -57,27 +77,27 @@ public class CharacterLocomotionManager : MonoBehaviour {
         float playerSpeedy = inputManager.GetPlayerMovement().y;
         float playerSpeed = playerSpeedx + playerSpeedy;
         float walkingThreshhold = 0f;
-        if (playerSpeedx  > walkingThreshhold | playerSpeedx < walkingThreshhold | playerSpeedy > walkingThreshhold | playerSpeedy < walkingThreshhold) {
+        if (playerSpeedx > walkingThreshhold | playerSpeedx < walkingThreshhold | playerSpeedy > walkingThreshhold | playerSpeedy < walkingThreshhold) {
             characterManager.armsAnimator.SetBool("isMoving", true);
             characterManager.weaponAnimator.SetBool("isMoving", true);
         } else if (playerSpeed == 0) {
             characterManager.armsAnimator.SetBool("isMoving", false);
-            characterManager.weaponAnimator.SetBool("isMoving", false) ;
+            characterManager.weaponAnimator.SetBool("isMoving", false);
         }
     }
-    
+
     //Checks if the sphere that got created at the players feet hits the ground or not
     public bool isGrounded() {
         return Physics.CheckSphere(groundCheck.position, groundDistance);
     }
 
     void Jump() {
-        
+
         if (inputManager.hasPlayerJumped() && isGrounded()) {
             Debug.Log(inputManager.hasPlayerJumped());
             Debug.Log(isGrounded());
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
     }
-    
+
 }

@@ -664,6 +664,8 @@ MonoBehaviour:
   grenadeGameObject: {fileID: 3478547928800094584, guid: 34ba2cff4dff03442bb43c473d3e557c,
     type: 3}
   projectileTransform: {fileID: 1544367961}
+  VFX_BloodSplatter: {fileID: 1640522280079813367, guid: e7159d630cc9b034595078567de8990b,
+    type: 3}
 --- !u!114 &321111726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1005,7 +1007,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &578222745
 MonoBehaviour:
@@ -1704,6 +1706,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   maxArenasToPlace: 15
+  arena: []
+  spawnPoints: []
+  surplusArenas: []
 --- !u!4 &954299096
 Transform:
   m_ObjectHideFlags: 0
