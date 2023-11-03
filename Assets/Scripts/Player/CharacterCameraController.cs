@@ -8,33 +8,35 @@ public class PlayerClass {
 }
 public class CharacterCameraController : MonoBehaviour {
     PlayerInputManager inputManager;
-    [SerializeField]
-    CharacterManager characterManager;
+    [SerializeField] CharacterManager characterManager;
 
-    [SerializeField] Transform playerBody;
-    [SerializeField] Transform headCamera;
-    Vector2 lookInput;
-    Vector2 cameraWantedRotation;
-    public float Sensitivity;
+    [SerializeField] Camera headCamera;
+    public float xSensitivity;
+    public float ySensitivity;
     float xRotation = 0f;
+
     private void Start() {
         inputManager = PlayerInputManager.Instance;
         characterManager = GetComponent<CharacterManager>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
+    private void Update() {
+        
+        Debug.Log(inputManager.GetMouseDelta());
+    }
     void HandleCameraMovement() {
         if (characterManager.canLook) {
-            lookInput = inputManager.GetMouseDelta();
-            float lookX = lookInput.x * Sensitivity * Time.deltaTime;
-            float lookY = lookInput.y * Sensitivity * Time.deltaTime;
-            xRotation -= lookY;
+            float mouseX = inputManager.GetMouseDelta().x;
+            float mouseY = inputManager.GetMouseDelta().y;
+            xRotation -= (mouseY * Time.deltaTime) * ySensitivity;
             xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-            headCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-            playerBody.Rotate(Vector3.up * lookX);
+            headCamera.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+            transform.root.Rotate(Vector3.up * (mouseX * Time.deltaTime) * xSensitivity);
         }
     }
-    private void Update() {
+    private void LateUpdate() {
         HandleCameraMovement();
     }
+
 }

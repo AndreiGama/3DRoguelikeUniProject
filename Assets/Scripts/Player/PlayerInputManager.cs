@@ -14,9 +14,6 @@ public class PlayerInputManager : MonoBehaviour {
     }
 
     PlayerControls playerControls;
-    CharacterController characterController;
-    [HideInInspector] public Vector2 movementInput;
-    [HideInInspector] public Vector2 lookInput;
     private void Awake() {
         if(_instance != null && _instance != this) {
             Destroy(this.gameObject);
