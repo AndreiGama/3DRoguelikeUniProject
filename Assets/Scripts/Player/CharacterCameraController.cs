@@ -21,10 +21,6 @@ public class CharacterCameraController : MonoBehaviour {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-    private void Update() {
-        
-        Debug.Log(inputManager.GetMouseDelta());
-    }
     void HandleCameraMovement() {
         if (characterManager.canLook) {
             float mouseX = inputManager.GetMouseDelta().x;

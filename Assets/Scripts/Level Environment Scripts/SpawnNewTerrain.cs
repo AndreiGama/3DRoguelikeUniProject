@@ -95,8 +95,7 @@ public class SpawnNewTerrain : MonoBehaviour {
                     // Clears previous spawnpoints
                     spawnPoints.Clear();
                     // Loops through the arena we placed in order to check for new spawnpoints -- credit to james for the for loop algorithm we got shown in class...
-
-                    if (surplusArenas.Count <= 0) {
+                    if(arenasPlaced <= maxArenasToPlace) {
                         for (int i = arenasPlaced; i > lastArenaPlacedIndex; i--) {
                             if (arena[i] != null) {
                                 CheckSlotValidity(arena[i].transform);
@@ -105,6 +104,7 @@ public class SpawnNewTerrain : MonoBehaviour {
                             }
                         }
                     }
+                        
 
                     currentWaveTier++;
                     if (currentWaveTier >= 10) {
@@ -119,11 +119,17 @@ public class SpawnNewTerrain : MonoBehaviour {
                 }
             }
         }
+        for (int i = maxArenasToPlace; i > 0; i--) {
+            if (arena[i] != null) {
+                CheckSlotValidity(arena[i].transform);
+            } else if (arena[i] == null) {
+                break;
+            }
+        }
         if (spawnPoints.Count > 0) {
             foreach (GameObject spawnpoint in spawnPoints) {
                 surplusArenas.Add(Instantiate(deadEndArena, spawnpoint.transform.position, spawnpoint.transform.rotation, terrainHolder.transform));
             }
-            spawnPoints.Clear();
         }
         foreach (GameObject surplusArena in surplusArenas) {
             waveManager = surplusArena.GetComponentInChildren<WaveManager>();
@@ -139,17 +145,21 @@ public class SpawnNewTerrain : MonoBehaviour {
     //Check if the slot the arena should spawn at is available or not
     void CheckSlotValidity(Transform spawnpointSlot) {
         Transform temp = spawnpointSlot.Find("Spawnpoints");
-        for (int i = 0; i < temp.childCount; i++) {
-            //Position the check will happen at
-            Vector3 localPos = new Vector3(25, 0, 25);
-            Vector3 worldPos = temp.GetChild(i).transform.TransformPoint(localPos);
-            Collider[] overlappedObject = Physics.OverlapSphere(worldPos, 3f, terrainLayers);
-            if (overlappedObject.Length == 0) {
-                spawnPoints.Add(temp.GetChild(i).gameObject);
-            } else {
-                // Spot Taken
+        if (temp != null) {
+            for (int i = 0; i < temp.childCount; i++) {
+                //Position the check will happen at
+                Vector3 localPos = new Vector3(25, 0, 25);
+                Vector3 worldPos = temp.GetChild(i).transform.TransformPoint(localPos);
+                Collider[] overlappedObject = Physics.OverlapSphere(worldPos, 3f, terrainLayers);
+                if (overlappedObject.Length == 0) {
+                    spawnPoints.Add(temp.GetChild(i).gameObject);
+                } else {
+                    Debug.Log("Spawnpoint: " + temp.GetChild(i) + " from: " + spawnpointSlot + " Taken.");
+                    // Spot Taken
+                }
             }
         }
+        
     }
 }
 
