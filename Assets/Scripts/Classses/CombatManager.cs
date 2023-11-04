@@ -12,18 +12,18 @@ public class CombatManager : MonoBehaviour, IDamagable {
     [Space(10)]
     [Header("CharacterStats")]
     [HideInInspector] public string characterName;
-    [HideInInspector] public int baseHealth;
-    public int health;
-    [HideInInspector] public int baseArmor;
-    public int armor;
-    [HideInInspector] public int baseMovementSpeed;
-    public int movementSpeed;
-    [HideInInspector] public int baseShield;
-    public int shield;
-    [HideInInspector] public int baseMaxHealth;
-    public int maxHealth;
-    [HideInInspector] public int baseMaxShield;
-    public int maxShield;
+    [HideInInspector] public float baseHealth;
+    public float health;
+    [HideInInspector] public float baseArmor;
+    public float armor;
+    [HideInInspector] public float baseMovementSpeed;
+    public float movementSpeed;
+    [HideInInspector] public float baseShield;
+    public float shield;
+    [HideInInspector] public float baseMaxHealth;
+    public float maxHealth;
+    [HideInInspector] public float baseMaxShield;
+    public float maxShield;
     [Space(5)]
     [Header("WeaponStats")]
     [HideInInspector] public string weaponName;
@@ -41,19 +41,22 @@ public class CombatManager : MonoBehaviour, IDamagable {
     public float armorAmplifier = 1f;
     public float healthAmplifier = 1f;
     public float critDamageAmplifier = 1.5f;
-    // Start is called before the first frame update
+
+    Transform Player;
     public void Start() {
         Debug.Log("Initializing Stats");
         LoadBaseStats();
         LoadWeaponStats();
         baseMaxHealth = health;
         baseMaxShield = baseShield;
+        maxHealth = baseMaxHealth;
+        maxShield = baseMaxShield;
     }
     public void AmplifyStats() {
-        armor = Mathf.FloorToInt(baseArmor * armorAmplifier);
-        movementSpeed = Mathf.FloorToInt(baseMovementSpeed * movementSpeedAmplifier);
-        maxShield = Mathf.FloorToInt(baseMaxShield * shieldAmplifier);
-        maxHealth = Mathf.FloorToInt(baseMaxHealth * armorAmplifier);
+        armor = baseArmor * armorAmplifier;
+        movementSpeed = baseMovementSpeed * movementSpeedAmplifier;
+        maxShield = baseMaxShield * shieldAmplifier;
+        maxHealth = baseMaxHealth * armorAmplifier;
     }
     bool IsHitHeadshot(string ColliderShot) {
         if(ColliderShot == "Head") {
@@ -112,13 +115,13 @@ public class CombatManager : MonoBehaviour, IDamagable {
         movementSpeed = baseMovementSpeed;
         shield = baseShield;
     }
-    public void doDamage(int dmgAmount) {
+    public void doDamage(int dmgAmount, bool isPlayer, PlayerCombatManager player) {
         if (baseShield > 0) {
             baseShield -= dmgAmount;
 
             // Check if there's still damage left after the shield is depleted
             if (baseShield < 0) {
-                int remainingDamage = Mathf.Abs(baseShield);
+                float remainingDamage = Mathf.Abs(baseShield);
                 baseShield = 0;
 
                 // Deduct the remaining damage from the health
@@ -128,8 +131,10 @@ public class CombatManager : MonoBehaviour, IDamagable {
             // If the shield is already depleted, deduct damage directly from health
             health -= dmgAmount;
         }
+        if (isPlayer) {
+            player.OnKillItemEffect();
+        }
     }
-
     public void die() {
         if(health <= 0) {
             Debug.Log("Die");

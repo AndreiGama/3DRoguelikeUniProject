@@ -13,8 +13,10 @@ public class PlayerCombatManager : CombatManager
     [HideInInspector] public CharacterAnimationManager animator;
     public GameObject damageNumberPrefab;
     public List<ItemList> items = new List<ItemList>();
+    public Transform VFXHolder;
     public new void Start() {
         StartCoroutine(CallItemUpdate());
+        StartCoroutine(CallDamageOvertimeItem());
         base.Start();
         Debug.Log("Initializing PlayerCombat Manager");
         inputManager = PlayerInputManager.Instance;
@@ -102,21 +104,7 @@ public class PlayerCombatManager : CombatManager
         //Destroy Timer
         Destroy(popup, 1f);
 
-        // Initialize objectPooling for damage numbers later on
     }
-
-    IEnumerator CallItemUpdate() {
-        foreach(ItemList i in items){
-            i.item.Update(this, i.stacks);
-        }
-        yield return new WaitForSeconds(1);
-        StartCoroutine(CallItemUpdate());
-    }
-    
-    
-    
-    
-
     void Interact() {
         if (inputManager.hasPlayerInteracted()) {
             RaycastHit[] hits = Physics.RaycastAll(fpsCamera.transform.position, fpsCamera.transform.forward, 20f);
@@ -134,6 +122,34 @@ public class PlayerCombatManager : CombatManager
                 }
             }
         }
-        
+    }
+
+    // Item related code
+    IEnumerator CallItemUpdate() {
+        foreach (ItemList i in items) {
+            i.item.Update(this, i.stacks);
+        }
+        yield return new WaitForSeconds(1);
+        StartCoroutine(CallItemUpdate());
+    }
+
+    IEnumerator CallDamageOvertimeItem() {
+        foreach (ItemList i in items) {
+            i.item.OnPeriodicItemEvent(this, i.stacks);
+        }
+        yield return new WaitForSeconds(1);
+        StartCoroutine(CallDamageOvertimeItem());
+    }
+
+    public void OnKillItemEffect() {
+        foreach (ItemList i in items) {
+            i.item.OnKill(this, i.stacks);
+        }
+    }
+
+    public void CallItemVFX() {
+        foreach (ItemList i in items) {
+            i.item.CreateVFX(VFXHolder);
+        }
     }
 }

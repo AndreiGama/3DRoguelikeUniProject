@@ -8,7 +8,7 @@ public abstract class Item
 {
     public abstract string GiveName();
     public abstract string GiveDescription();
-    public virtual void CreateVFX(PlayerCombatManager player) {
+    public virtual void CreateVFX(Transform player) {
 
     }
     public virtual void OnSpawn(PlayerCombatManager player, int stacks) {
@@ -17,10 +17,7 @@ public abstract class Item
     public virtual void Update(PlayerCombatManager player, int stacks) {
         // Items that require update goes here like healing.
     }
-    public virtual void OnHit(PlayerCombatManager player, IDamagable damagable, int stacks) {
-        //On Hit Effect items
-    }
-    public virtual void OnAoeHit(PlayerCombatManager player, IDamagable damageable, int stacks) {
+    public virtual void OnPeriodicItemEvent(PlayerCombatManager player, int stacks) {
 
     }
     public virtual void OnStatChange(PlayerCombatManager player, int stacks) {
@@ -54,6 +51,7 @@ public class PoisonCloudCrystal : Item {
     GameObject effect;
     float cooldown;
     int damage = 5;
+    GameObject poisonCloud;
     public override string GiveName() {
         return "Crystal of Poison Clouds";
     }
@@ -63,17 +61,18 @@ public class PoisonCloudCrystal : Item {
     }
 
     // Create poisonCloud script and add a reference to it and call doDamage from there.
-    public override void CreateVFX(PlayerCombatManager player) {
+    public override void CreateVFX(Transform player) {
         if (effect == null) effect = (GameObject)Resources.Load("ItemEffects/VFXCrystalPoisonCloud", typeof(GameObject));
-        GameObject poisonCloud = GameObject.Instantiate(effect, player.transform.position, Quaternion.Euler(Vector3.zero));
+        poisonCloud = GameObject.Instantiate(effect, player.position, Quaternion.Euler(Vector3.zero), player);
     }
 
     public override void Update(PlayerCombatManager player, int stacks) {
         cooldown -= 1;
     }
-    public override void OnAoeHit(PlayerCombatManager player, IDamagable damageable, int stacks) {
+    public override void OnPeriodicItemEvent(PlayerCombatManager player, int stacks) {
         if(cooldown <= 0) {
-            damageable.doDamage(damage * stacks);
+            PoisonCloud poisonCloudScript = poisonCloud.GetComponentInChildren<PoisonCloud>();
+            poisonCloudScript.CallItem(damage * stacks, player);
             cooldown = 2;
         }
         
@@ -139,6 +138,6 @@ public class RejuvenateCrystal : Item {
     }
 
     public override void OnKill(PlayerCombatManager player, int stacks) {
-        player.Heal(healthPerKill);
+        player.Heal(healthPerKill * stacks);
     }
 }

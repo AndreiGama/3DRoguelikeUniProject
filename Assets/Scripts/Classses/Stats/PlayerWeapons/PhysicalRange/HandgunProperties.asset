@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 361031c6dd5447a4abe3674de088430d, type: 3}
   m_Name: HandgunProperties
   m_EditorClassIdentifier: 
-  fireRate: 0.5
-  nextFireTime: 0
-  maxBulletHitRange: 50
-  maxTargetsPenetrate: 2
+  fireRate: 0
+  maxBulletHitRange: 25
+  maxTargetsPenetrate: 1

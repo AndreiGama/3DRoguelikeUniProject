@@ -6,8 +6,7 @@ using UnityEngine;
 public class ItemPickup : MonoBehaviour {
     public Item item;
     public Items itemDrop;
-    public bool itemChangeStats;
-
+    public ItemInteractionType itemType;
     private void Start() {
         // Depending on the item from the enumerator selected assigned the variable Item to values of the actual item
         item = AssignItem(itemDrop);
@@ -18,10 +17,15 @@ public class ItemPickup : MonoBehaviour {
         PlayerCombatManager player = other.GetComponent<PlayerCombatManager>();
         if(player != null) { 
             AddItem(player);
-            Debug.Log("Can item change stats: " + itemChangeStats);
-            if(itemChangeStats) {
-                Debug.Log("Item pickup can change stats");
-                player.CallStatUpdateOnItemPickup();
+            switch (itemType) {
+                case ItemInteractionType.ChangesStats:
+                    player.CallStatUpdateOnItemPickup();
+                    break;
+                case ItemInteractionType.CreatesVFX:
+                    player.CallItemVFX();
+                    break;
+                default:
+                    break;
             }
             Destroy(this.gameObject);
         }
@@ -65,4 +69,11 @@ public enum Items {
     DeffenseCrystal,
     PowerCrystal,
     RejuvenateCrystal
+}
+
+public enum ItemInteractionType {
+    Nothing,
+    ChangesStats,
+    CreatesVFX
+    
 }

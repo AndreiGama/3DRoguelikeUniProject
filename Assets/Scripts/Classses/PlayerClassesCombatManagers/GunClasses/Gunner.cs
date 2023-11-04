@@ -10,21 +10,21 @@ public class Gunner : PlayerCombatManager {
     
     [SerializeField] GunWeaponData gunData;
     public float fireRate;  // Rate of fire in seconds
-    private float nextFireTime;  // Time when the next shot can be fired
+    float canFire;
     public float maxBulletHitRange;  // Maximum distance for the raycast
     public int maxTargetsPenetrate; // Maximum number of targets to hit
 
-    string PrimaryAttackAnimation = "HandgunShoot";
-    string SecondaryAttackAnimation = "HandGunTrippleShoot";
+    //string PrimaryAttackAnimation = "HandgunShoot";
+    //string SecondaryAttackAnimation = "HandGunTrippleShoot";
 
     string PrimaryAttackAnimationArms = "A_Arm_Fire";
     string PrimaryAttackAnimationWeapon = "A_Glock_Fire";
 
-    string ReloadAnimationArms = "A_Arm_Reload";
-    string ReloadAnimationWeapon = "A_Glock_Reload";
+    //string ReloadAnimationArms = "A_Arm_Reload";
+    //string ReloadAnimationWeapon = "A_Glock_Reload";
 
-    string SecondaryAttackAnimationArms;
-    string SecondaryAttackAnimationWeapon;
+    //string SecondaryAttackAnimationArms;
+    //string SecondaryAttackAnimationWeapon;
     [SerializeField] LayerMask layersToHit;
 
     [SerializeField] Recoil _recoil;
@@ -35,14 +35,13 @@ public class Gunner : PlayerCombatManager {
     private new void Start() {
         base.Start();
         fireRate = gunData.fireRate;
-        nextFireTime = gunData.nextFireTime;
         maxBulletHitRange = gunData.maxBulletHitRange;
         maxTargetsPenetrate = gunData.maxTargetsPenetrate;
+        StartCoroutine(canFireTimer());
     }
 
     public void WeaponFire() {
         Debug.Log("WeaponFire");
-        if (Time.time > nextFireTime) {
             _recoil.recoil();
 
             RaycastHit[] hits = Physics.RaycastAll(fpsCamera.transform.position, fpsCamera.transform.forward, maxBulletHitRange, layersToHit, QueryTriggerInteraction.Collide);
@@ -76,7 +75,8 @@ public class Gunner : PlayerCombatManager {
                         //Grab hitbox component to check where the player hit
                         Debug.Log("Damage is being done");
                         int dmgAmount = PrimaryDamageCalculate(basePrimaryDamage, true, hitbox.bodyPartString);
-                        damagable.doDamage(dmgAmount);
+                        damagable.doDamage(dmgAmount, true, this);
+                        
                         CreateNumberPopUp(hitObject.transform.position, dmgAmount.ToString(), Color.white);
                         CreateBloodSplatter(hit);
                         previousHitObject = currentHitObject;
@@ -94,8 +94,6 @@ public class Gunner : PlayerCombatManager {
                 
                 
             }
-
-        }
     }
 
     void CreateBloodSplatter(RaycastHit hit) {
@@ -105,36 +103,17 @@ public class Gunner : PlayerCombatManager {
         GameObject temp = Instantiate(VFX_BloodSplatter, hit.point, Quaternion.Euler(reflectVector));
         GameObject.Destroy(temp, 1f);
     }
-
-    //IEnumerator recoil() {
-    //    Vector3 ogCameraPosition = fpsCamera.transform.localRotation.eulerAngles;
-    //    Vector3 recoiledCamera = new Vector3(fpsCamera.transform.localRotation.eulerAngles.x - recoilAmount, fpsCamera.transform.localRotation.eulerAngles.y, fpsCamera.transform.localRotation.eulerAngles.z);
-    //    //= Quaternion.Euler(Vector3.Lerp(fpsCamera.transform.localRotation.eulerAngles, recoiledCamera, RecoilTime));
-
-    //    float counter = 0;
-    //    while ( counter < RecoilTime)
-    //    {
-    //        counter += Time.deltaTime;
-    //        fpsCamera.transform.localEulerAngles = Vector3.Lerp(recoiledCamera, ogCameraPosition, counter / RecoilTime);
-
-    //        yield return new WaitForEndOfFrame();
-
-    //    }
-    //    while (counter >= 0) {
-    //        counter -= Time.deltaTime;
-    //        fpsCamera.transform.localEulerAngles = Vector3.Lerp(recoiledCamera, ogCameraPosition, counter / RecoilTime);
-
-    //        yield return new WaitForEndOfFrame();
-
-    //    }
-
-    //}
-    
-
-    
+    IEnumerator canFireTimer() {
+        canFire += Time.deltaTime;
+        yield return new WaitForEndOfFrame();
+        StartCoroutine(canFireTimer());
+    }
     public override void PrimaryAttackLogic() {
         // Primary Attack Logic
-        animator.PlayTargetActionAnimation(PrimaryAttackAnimationArms, PrimaryAttackAnimationWeapon, true, attackSpeedAmplifier);
+        if (canFire > fireRate / attackSpeedAmplifier) {
+            canFire = 0f;
+            animator.PlayTargetActionAnimation(PrimaryAttackAnimationArms, PrimaryAttackAnimationWeapon, true, attackSpeedAmplifier);
+        }
     }
 
     public override void SecondaryAttackLogic() {

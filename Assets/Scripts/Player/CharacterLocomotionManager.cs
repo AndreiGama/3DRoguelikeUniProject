@@ -50,19 +50,19 @@ public class CharacterLocomotionManager : MonoBehaviour {
 
             playerAcceleration = playerAcceleration + (playerInput * Time.deltaTime);
 
-            if (playerInput.magnitude < 0.01f) {
-                playerAcceleration = playerAcceleration * .95f;
-            }
+            //if (playerInput.magnitude < 0.01f) {
+            //    playerAcceleration = playerAcceleration * .95f;
+            //}
 
 
-            if (playerAcceleration.magnitude > 1) {
-                playerAcceleration = playerAcceleration.normalized;
-            }
+            //if (playerAcceleration.magnitude > 1) {
+            //    playerAcceleration = playerAcceleration.normalized;
+            //}
 
             // https://forum.unity.com/threads/make-character-accelerates-using-character-controller-component.848044/ acceleration / deceleration
 
-            Vector3 Move = transform.right * playerAcceleration.x + transform.forward * playerAcceleration.y;
-            characterManager.characterController.Move(Move * combatManager.baseMovementSpeed * Time.deltaTime);
+            Vector3 Move = transform.right * playerInput.x + transform.forward * playerInput.y;
+            characterManager.characterController.Move(Move * combatManager.movementSpeed * Time.deltaTime);
             // Handle gravity
             velocity.y += gravity + Time.deltaTime;
             characterManager.characterController.Move(velocity * Time.deltaTime);

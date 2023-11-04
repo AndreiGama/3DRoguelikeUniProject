@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Gunner
   m_EditorClassIdentifier: 
   characterName: Gunner
-  health: 60
-  armor: 0
+  health: 35
+  armor: 2
   movementSpeed: 5
   shield: 0

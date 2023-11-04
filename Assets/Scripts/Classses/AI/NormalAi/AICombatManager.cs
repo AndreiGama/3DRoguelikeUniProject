@@ -27,6 +27,6 @@ public class AICombatManager : CombatManager
         }
     }
     public void Attack(IDamagable target) {
-        target.doDamage(PrimaryDamageCalculate(basePrimaryDamage));
+        target.doDamage(PrimaryDamageCalculate(basePrimaryDamage), false);
     }
 }

@@ -5,43 +5,66 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class SpawnNewTerrain : MonoBehaviour {
+    // Nav mesh - AI Navigation
     [SerializeField] NavMeshSurface navMeshSurface;
+    // Terrain holder gameobject for where the arenas will be held in when instantiated
     public GameObject terrainHolder;
-    [SerializeField] GameObject[] arenaGameobjectIterations;
-    [SerializeField] GameObject arena1PresetBeggining, arena2PresetBeggining, arena3PresetBeggining;
+    // Arena prefab iterations
+    [SerializeField] GameObject[] arenaPrefabIterations;
+    // Arena prefab beggining interation
+    [SerializeField] GameObject arena1PresetBeggining, arena2PresetBeggining;
+    // Arena prevent loop iteration array
     [SerializeField] GameObject[] arenaPresetPreventLoop;
+    // Deadend arena 
     [SerializeField] GameObject deadEndArena;
+    // Collision layer to check for.
     [SerializeField] LayerMask terrainLayers;
-    [SerializeField] int maxArenasToPlace = 5;
+    // Sets max arenas to generate on level load
+    [SerializeField] int maxArenasToGenerate = 5;
+    // Holds every arena instantiated
     public GameObject[] arena;
+    // Holds spawnpoints
     public List<GameObject> spawnPoints = new List<GameObject>();
+    // Holds surplus arenas - left overs after the max arenas got spawned so they get a dead end and aren't left in the open
     public List<GameObject> surplusArenas = new List<GameObject>();
-    bool activatePreventLoop;
-    bool preventLoop;
-    int count;
-    int currentWaveTier;
+    // Variables for the forloop
+    bool activatePreventLoop; // Prevents arenas from going to a deadend
+    bool preventLoop; // Bool for prevent loop
+    int preventLoopCount; // Integer for prevent loop count
+    int currentWaveTier; 
     private void Awake() {
         // Initialize arena array with a size.
-        arena = new GameObject[maxArenasToPlace];
+        arena = new GameObject[maxArenasToGenerate];
         int lastArenaPlacedIndex;
         WaveManager waveManager = null;
-        for (int arenasPlaced = 0; arenasPlaced <= maxArenasToPlace;) {
-
+        
+        for (int arenasPlaced = 0; arenasPlaced < maxArenasToGenerate;) {
+            // If it's the first arena place then do the ArenaPresetBeggining array
             if (arenasPlaced == 0) {
+                // Instantiates arena map initially
                 arena[arenasPlaced] = Instantiate(arena1PresetBeggining, Vector3.zero, Quaternion.identity, terrainHolder.transform);
+                // Sets wave tier
                 waveManager = arena[arenasPlaced].GetComponentInChildren<WaveManager>();
                 waveManager.waveTier = (waveTiers)currentWaveTier;
+                // Grabs and adds spawnpoints
                 CheckSlotValidity(arena[arenasPlaced].transform);
+                // Sets last arena placed index for incoming for loop
                 lastArenaPlacedIndex = arenasPlaced;
+                // Increments wave tier
                 currentWaveTier++;
                 foreach (GameObject spawnpoint in spawnPoints) {
+                    //Increments arena placed and instantiates arenas
                     arenasPlaced++;
                     arena[arenasPlaced] = Instantiate(arena2PresetBeggining, spawnpoint.transform.position, spawnpoint.transform.rotation, terrainHolder.transform);
+                    //Sets wave tier
                     waveManager = arena[arenasPlaced].GetComponentInChildren<WaveManager>();
                     waveManager.waveTier = (waveTiers)currentWaveTier;
                 }
+                //Increments wave tier 
                 currentWaveTier++;
+                //Clears spawnpoints
                 spawnPoints.Clear();
+                // Checks for spawnpoints
                 for (int i = arenasPlaced; i > lastArenaPlacedIndex; i--) {
                     if (arena[i] != null) {
                         CheckSlotValidity(arena[i].transform);
@@ -53,84 +76,97 @@ public class SpawnNewTerrain : MonoBehaviour {
             } else {
                 //Checks for spawnpoints to be above 0 so it doesn't become an infinite loop
                 if (spawnPoints.Count > 0) {
-                    //Decreases count each time it loops back when it finds a possible infinite loop
-                    if (count <= 0) {
+                    //When the prevent loop mechanism is active decrease count representing how many times to place the set buildings.
+                    if (preventLoopCount <= 0) {
                         preventLoop = false;
                     } else if (preventLoop == true) {
-                        count--;
+                        preventLoopCount--;
                     }
+                    // Sets last arena placed index
                     lastArenaPlacedIndex = arenasPlaced;
-                    foreach (GameObject spawnpoint in spawnPoints) {
-                        arenasPlaced++;
-                        // Here is where it gets randomly selected or hard selected to make sure it doesn't run into a loop
-                        GameObject arenaIterationSpawn = arenaGameobjectIterations[Random.Range(0, arenaGameobjectIterations.Length)];
-                        // If the amount of arenas will be placed + the current amount of arenas generated are over the maximum arenas to place, it will bring a dead end arena to finish the build.
-                        if (spawnPoints.Count + arenasPlaced >= maxArenasToPlace) {
-                            surplusArenas.Add(Instantiate(deadEndArena, spawnpoint.transform.position, spawnpoint.transform.rotation, terrainHolder.transform));
-                        } else {
+                    if(arenasPlaced + spawnPoints.Count < maxArenasToGenerate) {
+                        foreach (GameObject spawnpoint in spawnPoints) {
+                            //Increments how many arena placed
+                            arenasPlaced++;
+                            // Here is where it gets randomly selected or hard selected to make sure it doesn't run into a loop
+                            GameObject arenaIterationSpawn = arenaPrefabIterations[Random.Range(0, arenaPrefabIterations.Length)];
+                            // If preventing loop, hardset what arenas spawn
                             if (preventLoop == true) {
-                                if (count == 2) {
+                                if (preventLoopCount == 2) {
                                     arenaIterationSpawn = arenaPresetPreventLoop[0];
-                                } else if (count == 1) {
+                                } else if (preventLoopCount == 1) {
                                     arenaIterationSpawn = arenaPresetPreventLoop[1];
                                 }
                             }
-                            // Instantaites object at spawnpoint
-                            arena[arenasPlaced] = Instantiate(arenaIterationSpawn, spawnpoint.transform.position, spawnpoint.transform.rotation, terrainHolder.transform);
+                            // Instantaites object at spawnpoint]
+                                arena[arenasPlaced] = Instantiate(arenaIterationSpawn, spawnpoint.transform.position, spawnpoint.transform.rotation, terrainHolder.transform);
+
+                            //Sets wave tier for each map
                             waveManager = arena[arenasPlaced].GetComponentInChildren<WaveManager>();
                             waveManager.waveTier = (waveTiers)currentWaveTier;
 
-                            // Check for infinite loop
-                            if (arenaIterationSpawn == arenaGameobjectIterations[0] || arenaIterationSpawn == arenaGameobjectIterations[1]) {
+                            // Check for infinite dead end loop
+                            if (arenaIterationSpawn == arenaPrefabIterations[0] || arenaIterationSpawn == arenaPrefabIterations[1]) {
                                 activatePreventLoop = true;
                             }
                         }
 
-                    }
-                    if (activatePreventLoop) {
-                        preventLoop = true;
-                        count = 3;
-                        activatePreventLoop = false;
-                    }
-                    // Clears previous spawnpoints
-                    spawnPoints.Clear();
-                    // Loops through the arena we placed in order to check for new spawnpoints -- credit to james for the for loop algorithm we got shown in class...
-                    if(arenasPlaced <= maxArenasToPlace) {
-                        for (int i = arenasPlaced; i > lastArenaPlacedIndex; i--) {
-                            if (arena[i] != null) {
-                                CheckSlotValidity(arena[i].transform);
-                            } else if (arena[i] == null) {
-                                break;
+
+                        // Starts the preventing loop count
+                        if (activatePreventLoop) {
+                            preventLoop = true;
+                            preventLoopCount = 3;
+                            activatePreventLoop = false;
+                        }
+                        // Clears previous spawnpoints
+                        spawnPoints.Clear();
+                        // Loops through the arena we placed in order to check for new spawnpoints -- credit to james for the for loop algorithm we got shown in class...
+                        if (arenasPlaced <= maxArenasToGenerate) {
+                            for (int i = arenasPlaced; i > lastArenaPlacedIndex; i--) {
+                                if (arena[i] != null) {
+                                    CheckSlotValidity(arena[i].transform);
+                                } else if (arena[i] == null) {
+                                    break;
+                                }
                             }
                         }
-                    }
-                        
 
-                    currentWaveTier++;
-                    if (currentWaveTier >= 10) {
-                        currentWaveTier = 10;
-                    }
-
-
+                        //Increments wave tier each loop
+                        currentWaveTier++;
+                        if (currentWaveTier >= 10) {
+                            currentWaveTier = 10;
+                        }
+                    } else {
+                        // When there is more spawnpoints than arenas you can place, this whill get called to stop the loop and finish the layout with Dead End arena prefabs.
+                        arenasPlaced = maxArenasToGenerate;
+                        foreach (GameObject spawnpoint in spawnPoints) {
+                                surplusArenas.Add(Instantiate(deadEndArena, spawnpoint.transform.position, spawnpoint.transform.rotation, terrainHolder.transform));
+                        }
+                        spawnPoints.Clear();
+                    }   
                 } else {
                     // Sets arena placed to maximum because otherwise it infinite loops and freezes
-                    arenasPlaced = maxArenasToPlace;
+                    arenasPlaced = maxArenasToGenerate;
                     break;
                 }
             }
         }
-        for (int i = maxArenasToPlace; i > 0; i--) {
+
+        //  Checks for any other spawnpoints just in case and grabs them
+        for (int i = maxArenasToGenerate - 1; i > 0; i--) {
             if (arena[i] != null) {
                 CheckSlotValidity(arena[i].transform);
             } else if (arena[i] == null) {
                 break;
             }
         }
+        // Adds the last dead end arenas if there is any spawnpoint found
         if (spawnPoints.Count > 0) {
             foreach (GameObject spawnpoint in spawnPoints) {
                 surplusArenas.Add(Instantiate(deadEndArena, spawnpoint.transform.position, spawnpoint.transform.rotation, terrainHolder.transform));
             }
         }
+        // Sets the wave tier to every surplus arena
         foreach (GameObject surplusArena in surplusArenas) {
             waveManager = surplusArena.GetComponentInChildren<WaveManager>();
             waveManager.waveTier = (waveTiers)currentWaveTier;
@@ -138,13 +174,17 @@ public class SpawnNewTerrain : MonoBehaviour {
     }
 
     private void Start() {
+
+        //Builds nav mesh
         navMeshSurface.BuildNavMesh();
     }
 
 
     //Check if the slot the arena should spawn at is available or not
     void CheckSlotValidity(Transform spawnpointSlot) {
+        // Looks for a the gameobject Spawnpoints
         Transform temp = spawnpointSlot.Find("Spawnpoints");
+        // if temp is null that means it's a dead end so do nothing otherwise loop through each child and check if there is an arena placed if there isn't then add to spawnpoints.
         if (temp != null) {
             for (int i = 0; i < temp.childCount; i++) {
                 //Position the check will happen at

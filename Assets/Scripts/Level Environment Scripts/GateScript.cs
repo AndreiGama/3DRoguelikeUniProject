@@ -8,10 +8,10 @@ public class GateScript : MonoBehaviour, IInteract
     public bool isOpen;
     Vector3 positionOpen;
     Vector3 positionClosed;
-    Collider collider;
+    Collider gateCollider;
     private void Start()
     {
-        collider = GetComponent<Collider>();
+        gateCollider = GetComponent<Collider>();
         gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>() ;
         positionOpen = new Vector3(transform.position.x, transform.position.y + 1.5f, transform.position.z);
         positionClosed = transform.position;
@@ -20,7 +20,7 @@ public class GateScript : MonoBehaviour, IInteract
 
 
     IEnumerator DoorManager() {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
         if (gameManager.isInWave) {
             DoorClose();
         } else if (!gameManager.isInWave && isOpen) {
@@ -31,11 +31,11 @@ public class GateScript : MonoBehaviour, IInteract
     public void doorOpen()
     {
         transform.position = positionOpen;
-        collider.enabled = false;
+        gateCollider.enabled = false;
     }
     public void DoorClose() {
         transform.position = positionClosed;
-        collider.enabled = false;
+        gateCollider.enabled = true;
     }
 
     public void Interact()

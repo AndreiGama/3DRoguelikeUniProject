@@ -6,7 +6,6 @@ using UnityEngine;
 public class GunWeaponData : ScriptableObject
 {
     public float fireRate;
-    public float nextFireTime; 
     public float maxBulletHitRange;
     public int maxTargetsPenetrate;
 }

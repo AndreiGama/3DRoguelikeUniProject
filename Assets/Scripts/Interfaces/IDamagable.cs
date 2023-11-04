@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IDamagable
 {
-    public void doDamage(int damage);
+    public void doDamage(int damage, bool isPlayer, PlayerCombatManager player = null);
 }

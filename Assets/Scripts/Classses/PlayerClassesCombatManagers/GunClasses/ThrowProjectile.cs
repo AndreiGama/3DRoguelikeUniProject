@@ -5,7 +5,6 @@ using UnityEngine;
 public class ThrowProjectile : MonoBehaviour
 {
     Transform parentTransform;
-    float gravity = -9.87f;
     Rigidbody rb;
     [SerializeField] float forwardForce;
     [SerializeField] float upForce;
