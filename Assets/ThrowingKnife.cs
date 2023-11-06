@@ -7,7 +7,6 @@ public class ThrowingKnife : MonoBehaviour
     public PlayerCombatManager playerCombatManager;
     private void OnTriggerEnter(Collider other) {
         if(other != null) {
-            Debug.Log("Hit enemy with throwing Knife");
             IDamagable damagable = other.transform.GetComponentInParent<IDamagable>();
             HitboxComponent hitPoint = other.transform.GetComponent<HitboxComponent>();
             if (damagable != null) {

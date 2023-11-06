@@ -35,6 +35,11 @@ public class Gunner : PlayerCombatManager {
 
     [SerializeField] GameObject dynamitePrefab;
     [SerializeField] GameObject throwingKnifePrefab;
+
+    [SerializeField] float cooldownAbility1;
+    [SerializeField] float cooldownAbility2;
+    bool canUseAbility1 = true;
+    bool canUseAbility2 = true;
     private new void Start() {
         base.Start();
         fireRate = gunData.fireRate;
@@ -126,20 +131,45 @@ public class Gunner : PlayerCombatManager {
     }
 
     public override void SecondaryAttackLogic() {
-        // Secondary Attack Logic
+        StartCoroutine(SecondaryAbility());
     }
 
     public override void Abillity1Logic() {
-        GameObject throwKnife = Instantiate(throwingKnifePrefab, fpsCamera.transform.position, fpsCamera.transform.rotation);
-        ThrowingKnife throwKnifeScript = throwKnife.GetComponentInChildren<ThrowingKnife>();
-        throwKnifeScript.playerCombatManager = this;
-        // First Abilitty Logic
+        if (canUseAbility1) {
+            StartCoroutine(CooldownAbility(canUseAbility1, cooldownAbility1));
+            GameObject throwKnife = Instantiate(throwingKnifePrefab, fpsCamera.transform.position, fpsCamera.transform.rotation);
+            ThrowingKnife throwKnifeScript = throwKnife.GetComponentInChildren<ThrowingKnife>();
+            throwKnifeScript.playerCombatManager = this;
+            // First Abilitty Logic
+        }
     }
 
     public override void Abillity2Logic() {
-        GameObject dynamite = Instantiate(dynamitePrefab, fpsCamera.transform.position, fpsCamera.transform.rotation);
-        BombScript dynamiteScript = dynamite.GetComponentInChildren<BombScript>();
-        dynamiteScript.playerCombatManager = this;
-        // Second Abillity logic
+        if (canUseAbility2) {
+            StartCoroutine(CooldownAbility(canUseAbility2, cooldownAbility2));
+            GameObject dynamite = Instantiate(dynamitePrefab, fpsCamera.transform.position, fpsCamera.transform.rotation);
+            BombScript dynamiteScript = dynamite.GetComponentInChildren<BombScript>();
+            dynamiteScript.playerCombatManager = this;
+            // Second Abillity logic
+        }
+
+    }
+
+    IEnumerator CooldownAbility(bool canUseAbility, float cooldown) {
+        canUseAbility = false;
+        yield return new WaitForSeconds(cooldown);
+        canUseAbility = true;
+    }
+
+    IEnumerator SecondaryAbility() {
+        attackSpeedAmplifier += .5f;
+        movementSpeed += .5f;
+        abilityDamageAmplifier += .5f;
+        primaryDamageAmplifier += .5f;
+        yield return new WaitForSeconds(15f);
+        attackSpeedAmplifier -= .5f;
+        movementSpeed -= .5f;
+        abilityDamageAmplifier -= .5f;
+        primaryDamageAmplifier -= .5f;
     }
 }
