@@ -5,15 +5,12 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class SpawnNewTerrain : MonoBehaviour {
-    // Nav mesh - AI Navigation
     [SerializeField] NavMeshSurface navMeshSurface;
     // Terrain holder gameobject for where the arenas will be held in when instantiated
     public GameObject terrainHolder;
-    // Arena prefab iterations
+    // Arena prefab iterations and presets for scenarios such as the beggining generation
     [SerializeField] GameObject[] arenaPrefabIterations;
-    // Arena prefab beggining interation
     [SerializeField] GameObject arena1PresetBeggining, arena2PresetBeggining;
-    // Arena prevent loop iteration array
     [SerializeField] GameObject[] arenaPresetPreventLoop;
     // Deadend arena 
     [SerializeField] GameObject deadEndArena;
@@ -50,19 +47,15 @@ public class SpawnNewTerrain : MonoBehaviour {
                 CheckSlotValidity(arena[arenasPlaced].transform);
                 // Sets last arena placed index for incoming for loop
                 lastArenaPlacedIndex = arenasPlaced;
-                // Increments wave tier
                 currentWaveTier++;
                 foreach (GameObject spawnpoint in spawnPoints) {
-                    //Increments arena placed and instantiates arenas
                     arenasPlaced++;
                     arena[arenasPlaced] = Instantiate(arena2PresetBeggining, spawnpoint.transform.position, spawnpoint.transform.rotation, terrainHolder.transform);
                     //Sets wave tier
                     waveManager = arena[arenasPlaced].GetComponentInChildren<WaveManager>();
                     waveManager.waveTier = (waveTiers)currentWaveTier;
                 }
-                //Increments wave tier 
                 currentWaveTier++;
-                //Clears spawnpoints
                 spawnPoints.Clear();
                 // Checks for spawnpoints
                 for (int i = arenasPlaced; i > lastArenaPlacedIndex; i--) {

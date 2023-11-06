@@ -1102,7 +1102,7 @@ GameObject:
   - component: {fileID: 8607485500781076645}
   m_Layer: 8
   m_Name: Enemy_Wizzard
-  m_TagString: Untagged
+  m_TagString: EnemyParent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1169,7 +1169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterStats: {fileID: 11400000, guid: be7d9f09b2e57394f9675408705aa2dd, type: 2}
-  weaponData: {fileID: 11400000, guid: 08c2b6fd6c3ea7044aaba512c3553281, type: 2}
+  weaponData: {fileID: 0}
   characterName: 
   baseHealth: 0
   health: 0
@@ -1213,6 +1213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
   TargetTag: Player
+  knockback: 0
 --- !u!195 &3161976597588473049
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2343,7 +2344,7 @@ GameObject:
   - component: {fileID: 1302036383404836487}
   m_Layer: 8
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: BodyCollider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2392,7 +2393,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

@@ -18,19 +18,19 @@ public class PlayerCombatManager : CombatManager
     PlayerUIManager playerUIManager;
     public float ability1Damage;
     public float ability2Damage;
+    public float difficultyDamage;
     
     public new void Start() {
         StartCoroutine(CallItemUpdate());
         StartCoroutine(CallDamageOvertimeItem());
         base.Start();
+        difficultyDamage = GameManager.Instance.difficultyAmplify;
         Debug.Log("Initializing PlayerCombat Manager");
         inputManager = PlayerInputManager.Instance;
         characterManager = GetComponent<CharacterManager>();
         animator = GetComponent<CharacterAnimationManager>();
         playerUIManager = GetComponent<PlayerUIManager>();
-
     }
-
     public void CallStatUpdateOnItemPickup() {
         foreach (ItemList i in items) {
             i.item.OnStatChange(this, i.stacks);

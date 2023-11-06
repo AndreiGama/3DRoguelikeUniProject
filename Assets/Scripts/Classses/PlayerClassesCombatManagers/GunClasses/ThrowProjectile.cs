@@ -22,6 +22,5 @@ public class ThrowProjectile : MonoBehaviour
         Vector3 forceToAdd = parentTransform.forward * forwardForce + parentTransform.up * upForce;
         rb.AddForce(forceToAdd, ForceMode.Impulse);
         yield return new WaitForSeconds(3f);
-        Destroy(this.gameObject);
     }
 }

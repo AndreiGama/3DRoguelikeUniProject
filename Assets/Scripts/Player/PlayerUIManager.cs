@@ -48,7 +48,6 @@ public class PlayerUIManager : MonoBehaviour
         foreach (RaycastHit hit in hits) {
             ITooltip tooltip = hit.transform.GetComponent<ITooltip>();
             if (tooltip != null && lastHitTooltipObject != hit.transform) {
-                FadeIn();
                     lastHitTooltipObject = hit.transform;
                     tooltip.Tooltip(this);
                     FadeIn();

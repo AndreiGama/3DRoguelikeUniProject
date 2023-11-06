@@ -6,11 +6,22 @@ public class ThrowingKnife : MonoBehaviour
 {
     public PlayerCombatManager playerCombatManager;
     private void OnTriggerEnter(Collider other) {
-        if(other.gameObject.layer == LayerMask.GetMask("Enemy")) {
-            IDamagable damagable = other.transform.GetComponent<IDamagable>();
-            if(damagable != null) {
-                damagable.doDamage(playerCombatManager.AbilityDamageCalculate(playerCombatManager.ability1Damage, true, other.name),  true, playerCombatManager);
+        if(other != null) {
+            Debug.Log("Hit enemy with throwing Knife");
+            IDamagable damagable = other.transform.GetComponentInParent<IDamagable>();
+            HitboxComponent hitPoint = other.transform.GetComponent<HitboxComponent>();
+            if (damagable != null) {
+                int dmg = playerCombatManager.AbilityDamageCalculate(playerCombatManager.ability1Damage, true, hitPoint.bodyPartString);
+                damagable.doDamage(dmg, true, playerCombatManager);
+                playerCombatManager.CreateNumberPopUp(other.transform.position, dmg.ToString(), Color.cyan);
+                Destroy(transform.parent.gameObject);
             }
+        }
+            
+    }
+    private void OnCollisionEnter(Collision collision) {
+        if (!collision.gameObject.layer.Equals(LayerMask.GetMask("Player"))) {
+            Destroy(transform.parent.gameObject);
         }
     }
 }

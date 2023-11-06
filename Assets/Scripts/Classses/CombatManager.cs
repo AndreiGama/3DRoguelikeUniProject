@@ -27,7 +27,7 @@ public class CombatManager : MonoBehaviour, IDamagable {
     [Space(5)]
     [Header("WeaponStats")]
     [HideInInspector] public string weaponName;
-    [HideInInspector] public int basePrimaryDamage;
+    [HideInInspector] public float basePrimaryDamage;
     [HideInInspector] public WeaponType weaponType;
     [Space(10)]
     [Header("Amplifiers")]
@@ -81,7 +81,7 @@ public class CombatManager : MonoBehaviour, IDamagable {
         
     }
 
-    public int PrimaryDamageCalculate(int BaseDamage, bool canHeadshot = false, string HitBodypartName = "") {
+    public int PrimaryDamageCalculate(float BaseDamage, bool canHeadshot = false, string HitBodypartName = "") {
         if (canHeadshot) {
             if (IsHitHeadshot(HitBodypartName)) {
                 return Mathf.FloorToInt((BaseDamage * critDamageAmplifier) * primaryDamageAmplifier);
@@ -100,7 +100,7 @@ public class CombatManager : MonoBehaviour, IDamagable {
     public virtual void LoadWeaponStats() {
         weaponName = weaponData.weaponName;
         weaponType = weaponData.weaponType;
-        basePrimaryDamage = weaponData.baseDamage;
+        basePrimaryDamage = Mathf.RoundToInt(weaponData.baseDamage);
     }
 
     private void LoadBaseStats() {

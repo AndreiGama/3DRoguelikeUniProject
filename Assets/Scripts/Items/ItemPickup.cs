@@ -14,9 +14,6 @@ public class ItemPickup : MonoBehaviour, IInteract, ITooltip {
     }
 
     public void Tooltip(PlayerUIManager player) {
-        Debug.Log(item);
-        Debug.Log(item.GiveName());
-        Debug.Log(item.GiveDescription());
         player.SetTooltip(item.GiveName(), item.GiveDescription());
     }
     public void Interact(PlayerCombatManager player) {

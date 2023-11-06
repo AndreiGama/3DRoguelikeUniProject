@@ -6,8 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public bool isInWave;
     public int enemiesInWaveLeft;
-
     private static GameManager _instance;
+    public float difficultyAmplify;
     public static GameManager Instance {
         get {
             return _instance;

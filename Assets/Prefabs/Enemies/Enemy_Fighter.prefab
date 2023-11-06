@@ -678,6 +678,39 @@ Transform:
   - {fileID: 7381069769469976607}
   m_Father: {fileID: 3799209614347516133}
   m_LocalEulerAnglesHint: {x: 53.626743, y: 1.6797931, z: 3.096031}
+--- !u!1 &2521429625903831160
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9158736960775792897}
+  m_Layer: 8
+  m_Name: Collisions
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9158736960775792897
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2521429625903831160}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5485105721234543977}
+  - {fileID: 5656041079624311593}
+  m_Father: {fileID: 387113125084245328}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2563043368168553531
 GameObject:
   m_ObjectHideFlags: 0
@@ -1943,8 +1976,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5485105721234543977}
-  - {fileID: 5656041079624311593}
+  - {fileID: 9158736960775792897}
   - {fileID: 2376184243918066633}
   - {fileID: 6526843704636923301}
   - {fileID: 6740046200931483111}
@@ -2341,7 +2373,7 @@ GameObject:
   - component: {fileID: 1819034926515934890}
   m_Layer: 8
   m_Name: bodycollider
-  m_TagString: Untagged
+  m_TagString: BodyCollider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2354,12 +2386,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5244909577986524900}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.086, y: -0.252, z: -0.052}
-  m_LocalScale: {x: 1.4303883, y: 1.7359992, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -4.656613e-10, w: 1}
+  m_LocalPosition: {x: -0.086000495, y: -0.2520001, z: -0.052000668}
+  m_LocalScale: {x: 1.4303883, y: 1.7359993, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 387113125084245328}
+  m_Father: {fileID: 9158736960775792897}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &2270319406109718282
 BoxCollider:
@@ -3912,12 +3944,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8897514730836843606}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.006, y: 0.742, z: 0.073}
-  m_LocalScale: {x: 0.40987676, y: 0.32068086, z: 0.3672423}
+  m_LocalRotation: {x: -0, y: -0, z: -4.656613e-10, w: 1}
+  m_LocalPosition: {x: 0.006000844, y: 0.74200004, z: 0.073000036}
+  m_LocalScale: {x: 0.4098768, y: 0.32068086, z: 0.3672423}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 387113125084245328}
+  m_Father: {fileID: 9158736960775792897}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &4387195457177694112
 BoxCollider:
@@ -6080,6 +6112,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7d8d5ca828d8e4147bce3027097e69b5,
+        type: 3}
+      propertyPath: m_TagString
+      value: EnemyParent
       objectReference: {fileID: 0}
     - target: {fileID: 1092408308860062549, guid: 7d8d5ca828d8e4147bce3027097e69b5,
         type: 3}
@@ -8385,7 +8422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterStats: {fileID: 11400000, guid: 39b87e8c5d1443f49b48ab6aad548871, type: 2}
-  weaponData: {fileID: 11400000, guid: 7b78f435ebfa8154d9558acde25a94d9, type: 2}
+  weaponData: {fileID: 0}
   characterName: 
   baseHealth: 0
   health: 0
@@ -8429,6 +8466,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
   TargetTag: Player
+  knockback: 0
 --- !u!195 &176432360046183639
 NavMeshAgent:
   m_ObjectHideFlags: 0

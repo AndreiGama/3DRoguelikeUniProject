@@ -41,6 +41,12 @@ public class Gunner : PlayerCombatManager {
         maxBulletHitRange = gunData.maxBulletHitRange;
         maxTargetsPenetrate = gunData.maxTargetsPenetrate;
         StartCoroutine(canFireTimer());
+        ability1Damage = 10;
+        ability2Damage = 15;
+
+        basePrimaryDamage *= difficultyDamage;
+        ability1Damage *= difficultyDamage;
+        ability2Damage *= difficultyDamage;
     }
 
     public void WeaponFire() {
@@ -124,15 +130,15 @@ public class Gunner : PlayerCombatManager {
     }
 
     public override void Abillity1Logic() {
-        GameObject throwKnife = Instantiate(grenadeGameObject, projectileTransform.position, Quaternion.identity);
-        ThrowingKnife throwKnifeScript = throwKnife.GetComponent<ThrowingKnife>();
+        GameObject throwKnife = Instantiate(throwingKnifePrefab, fpsCamera.transform.position, fpsCamera.transform.rotation);
+        ThrowingKnife throwKnifeScript = throwKnife.GetComponentInChildren<ThrowingKnife>();
         throwKnifeScript.playerCombatManager = this;
         // First Abilitty Logic
     }
 
     public override void Abillity2Logic() {
-        GameObject dynamite = Instantiate(grenadeGameObject, projectileTransform.position, Quaternion.identity);
-        BombScript dynamiteScript = dynamite.GetComponent<BombScript>();
+        GameObject dynamite = Instantiate(dynamitePrefab, fpsCamera.transform.position, fpsCamera.transform.rotation);
+        BombScript dynamiteScript = dynamite.GetComponentInChildren<BombScript>();
         dynamiteScript.playerCombatManager = this;
         // Second Abillity logic
     }

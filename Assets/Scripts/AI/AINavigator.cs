@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -20,16 +21,12 @@ public class AINavigator : MonoBehaviour
         Debug.Log(OwnerAttackRange);
     }
     public void Move() {
-        agent.isStopped = false;
-        agent.SetDestination(targetTransform.position);
+            agent.isStopped = false;
+            agent.SetDestination(targetTransform.position);
     }
-
     public bool isInAttackRange() {
         float distance = Vector3.Distance(transform.position, targetTransform.position);
-        Debug.Log(distance);
-        Debug.Log(OwnerAttackRange);
         if (distance <= OwnerAttackRange) {
-            Debug.Log("inAttackRange");
             return true;
         } else {
             return false;
@@ -37,6 +34,9 @@ public class AINavigator : MonoBehaviour
     }
 
     public void Stop() {
-        agent.isStopped = true;
+            agent.isStopped = true;
+    }
+
+    private void Update() {
     }
 }
