@@ -32,6 +32,9 @@ public class Gunner : PlayerCombatManager {
     [SerializeField] GameObject grenadeGameObject;
     [SerializeField] Transform projectileTransform;
     [SerializeField] GameObject VFX_BloodSplatter;
+
+    [SerializeField] GameObject dynamitePrefab;
+    [SerializeField] GameObject throwingKnifePrefab;
     private new void Start() {
         base.Start();
         fireRate = gunData.fireRate;
@@ -117,19 +120,20 @@ public class Gunner : PlayerCombatManager {
     }
 
     public override void SecondaryAttackLogic() {
-        Instantiate(grenadeGameObject, projectileTransform.position, fpsCamera.transform.rotation);
         // Secondary Attack Logic
     }
 
     public override void Abillity1Logic() {
+        GameObject throwKnife = Instantiate(grenadeGameObject, projectileTransform.position, Quaternion.identity);
+        ThrowingKnife throwKnifeScript = throwKnife.GetComponent<ThrowingKnife>();
+        throwKnifeScript.playerCombatManager = this;
         // First Abilitty Logic
-        GameManager gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
-        gameManager.isInWave = true;
     }
 
     public override void Abillity2Logic() {
+        GameObject dynamite = Instantiate(grenadeGameObject, projectileTransform.position, Quaternion.identity);
+        BombScript dynamiteScript = dynamite.GetComponent<BombScript>();
+        dynamiteScript.playerCombatManager = this;
         // Second Abillity logic
-        GameManager gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
-        gameManager.isInWave = false;
     }
 }

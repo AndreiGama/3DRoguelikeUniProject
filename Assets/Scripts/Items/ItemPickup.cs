@@ -3,19 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class ItemPickup : MonoBehaviour {
+public class ItemPickup : MonoBehaviour, IInteract, ITooltip {
     public Item item;
     public Items itemDrop;
     public ItemInteractionType itemType;
     private void Start() {
         // Depending on the item from the enumerator selected assigned the variable Item to values of the actual item
         item = AssignItem(itemDrop);
+        
     }
 
-    private void OnTriggerEnter(Collider other) {
-        Debug.Log("Entity is being colided with");
-        PlayerCombatManager player = other.GetComponent<PlayerCombatManager>();
-        if(player != null) { 
+    public void Tooltip(PlayerUIManager player) {
+        Debug.Log(item);
+        Debug.Log(item.GiveName());
+        Debug.Log(item.GiveDescription());
+        player.SetTooltip(item.GiveName(), item.GiveDescription());
+    }
+    public void Interact(PlayerCombatManager player) {
+        Debug.Log("Crystal Interaction");
+        if (player != null) {
             AddItem(player);
             switch (itemType) {
                 case ItemInteractionType.ChangesStats:

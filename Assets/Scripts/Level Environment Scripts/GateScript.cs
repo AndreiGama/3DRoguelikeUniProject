@@ -38,7 +38,7 @@ public class GateScript : MonoBehaviour, IInteract
         gateCollider.enabled = true;
     }
 
-    public void Interact()
+    public void Interact(PlayerCombatManager player = null)
     {
         if (!isOpen) {
             isOpen = true;

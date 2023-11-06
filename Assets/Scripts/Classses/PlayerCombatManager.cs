@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerCombatManager : CombatManager
 {
@@ -14,6 +15,10 @@ public class PlayerCombatManager : CombatManager
     public GameObject damageNumberPrefab;
     public List<ItemList> items = new List<ItemList>();
     public Transform VFXHolder;
+    PlayerUIManager playerUIManager;
+    public float ability1Damage;
+    public float ability2Damage;
+    
     public new void Start() {
         StartCoroutine(CallItemUpdate());
         StartCoroutine(CallDamageOvertimeItem());
@@ -22,7 +27,7 @@ public class PlayerCombatManager : CombatManager
         inputManager = PlayerInputManager.Instance;
         characterManager = GetComponent<CharacterManager>();
         animator = GetComponent<CharacterAnimationManager>();
-        
+        playerUIManager = GetComponent<PlayerUIManager>();
 
     }
 
@@ -36,6 +41,13 @@ public class PlayerCombatManager : CombatManager
         // base.Update();
         HandleAllAttacks();
         Interact();
+        ItemTabToggle();
+    }
+
+    private void ItemTabToggle() {
+        if (inputManager.hasPlayerCheckedItemsTab()) {
+            playerUIManager.CrystalTabUi();
+        }
     }
 
     void HandleAllAttacks() {
@@ -107,7 +119,7 @@ public class PlayerCombatManager : CombatManager
     }
     void Interact() {
         if (inputManager.hasPlayerInteracted()) {
-            RaycastHit[] hits = Physics.RaycastAll(fpsCamera.transform.position, fpsCamera.transform.forward, 20f);
+            RaycastHit[] hits = Physics.RaycastAll(fpsCamera.transform.position, fpsCamera.transform.forward, 20f, LayerMask.GetMask("Tooltip") | LayerMask.GetMask("Default"), QueryTriggerInteraction.Collide);
             Array.Sort(hits, (hit1, hit2) => hit1.distance.CompareTo(hit2.distance));
             
             foreach (RaycastHit hit in hits) {
@@ -115,7 +127,7 @@ public class PlayerCombatManager : CombatManager
                 Debug.Log("Looking for IInteractScript");
                 if (interactObject != null) {
                     Debug.Log("Interacting");
-                    interactObject.Interact();
+                    interactObject.Interact(this);
                     break;
                 } else {
                     Debug.Log("Not interactable");
@@ -152,4 +164,6 @@ public class PlayerCombatManager : CombatManager
             i.item.CreateVFX(VFXHolder);
         }
     }
+
+    
 }

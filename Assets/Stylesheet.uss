@@ -1,0 +1,17 @@
+.Tooltip {
+    opacity: 0;
+}
+
+.opacityIn {
+    transition-property: opacity;
+    transition-timing-function: ease-in;
+    transition-duration: 1s;
+    opacity: 1;
+}
+
+.opacityOut {
+    transition-property: opacity;
+    transition-timing-function: ease-out;
+    transition-duration: 1s;
+    opacity: 0;
+}

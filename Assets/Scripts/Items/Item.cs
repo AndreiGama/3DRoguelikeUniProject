@@ -8,6 +8,7 @@ public abstract class Item
 {
     public abstract string GiveName();
     public abstract string GiveDescription();
+    public abstract Sprite GiveSprite();
     public virtual void CreateVFX(Transform player) {
 
     }
@@ -36,7 +37,9 @@ public class HealingCrystal : Item {
     public override string GiveDescription() {
         return "The crystal of healing has the power to heal the user for 5 health per item collected of the same type.";
     }
-
+    public override Sprite GiveSprite() {
+        return (Sprite)Resources.Load("Sprites/Crystal_Healing", typeof(Sprite));
+    }
     public override void Update(PlayerCombatManager player, int stacks) {
         cooldown -= 1;
         if(cooldown <= 0) {
@@ -59,7 +62,9 @@ public class PoisonCloudCrystal : Item {
     public override string GiveDescription() {
         return "Create a cloud of poison around the player which damages enemies who enter for 5 damage per stack every second";
     }
-
+    public override Sprite GiveSprite() {
+        return (Sprite)Resources.Load("Sprites/Crystal_Poison", typeof(Sprite));
+    }
     // Create poisonCloud script and add a reference to it and call doDamage from there.
     public override void CreateVFX(Transform player) {
         if (effect == null) effect = (GameObject)Resources.Load("ItemEffects/VFXCrystalPoisonCloud", typeof(GameObject));
@@ -87,7 +92,9 @@ public class SpeedCrystal : Item {
     public override string GiveDescription() {
         return "The crystal of speed grants the user the ability to move quickly and attack faster by 10% per stack";
     }
-
+    public override Sprite GiveSprite() {
+        return (Sprite)Resources.Load("Sprites/Crystal_Speed", typeof(Sprite));
+    }
     public override void OnStatChange(PlayerCombatManager player, int stacks) {
         player.movementSpeedAmplifier = player.baseAplifierValue + stacks / 10f;
         player.attackSpeedAmplifier = player.baseAplifierValue + stacks / 10f;
@@ -103,7 +110,9 @@ public class DeffenseCrystal : Item {
     public override string GiveDescription() {
         return "The crystal of deffense will amplify the user's maximum health points, maximum shield capacity and armor by 10% per stack";
     }
-
+    public override Sprite GiveSprite() {
+        return (Sprite)Resources.Load("Sprites/Crystal_Deffense", typeof(Sprite));
+    }
     public override void OnStatChange(PlayerCombatManager player, int stacks) {
         Debug.Log("Stats are being adjusted");
         player.healthAmplifier = player.baseAplifierValue + stacks / 10f;
@@ -121,7 +130,9 @@ public class PowerCrystal : Item {
     public override string GiveDescription() {
         return "The crystal of Power grants the user amplified damage for both abilities and their main attacks";
     }
-
+    public override Sprite GiveSprite() {
+        return (Sprite)Resources.Load("Sprites/Crystal_Power", typeof(Sprite));
+    }
     public override void OnStatChange(PlayerCombatManager player, int stacks) {
         player.abilityDamageAmplifier = player.baseAplifierValue + stacks / 10f;
         player.abilityDamageAmplifier = player.baseAplifierValue + stacks / 10f;
@@ -136,7 +147,9 @@ public class RejuvenateCrystal : Item {
     public override string GiveDescription() {
         return "The crystal of rejuvenation will grant the user the ability to gain 5 health per enemy slayn. Every stack grants 5 more hp";
     }
-
+    public override Sprite GiveSprite() {
+        return (Sprite)Resources.Load("Sprites/Crystal_Rejuvenate", typeof(Sprite));
+    }
     public override void OnKill(PlayerCombatManager player, int stacks) {
         player.Heal(healthPerKill * stacks);
     }

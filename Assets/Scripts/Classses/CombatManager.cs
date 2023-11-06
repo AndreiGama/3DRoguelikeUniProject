@@ -68,7 +68,7 @@ public class CombatManager : MonoBehaviour, IDamagable {
             return false;
         }
     }
-    public int AbilityDamageCalculate(int AbilityDamage, bool canHeadshot = false, string HitBodypartName = "") {
+    public int AbilityDamageCalculate(float AbilityDamage, bool canHeadshot = false, string HitBodypartName = "") {
         if(canHeadshot) {
             if (IsHitHeadshot(HitBodypartName)) {
                 return Mathf.FloorToInt((AbilityDamage * critDamageAmplifier) * abilityDamageAmplifier);

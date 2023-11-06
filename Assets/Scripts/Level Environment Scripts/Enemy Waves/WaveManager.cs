@@ -116,7 +116,7 @@ public class WaveManager : MonoBehaviour
         }
         yield return new WaitForSecondsRealtime(Random.Range(0, maxSpawnRateTime));
         Transform spawnpoint = spawnpoints[Random.Range(0, spawnpoints.Count)];
-        Instantiate(enemies[Random.Range(0, enemies.Length)], spawnpoint.position, spawnpoint.rotation, enemyHolder);
+        Instantiate(enemies[Random.Range(0, enemies.Length)], spawnpoint.position, spawnpoint.rotation);
         enemiesToKill--;
         if(enemiesToKill >= 0) {
             StartCoroutine(SpawnEnemy());

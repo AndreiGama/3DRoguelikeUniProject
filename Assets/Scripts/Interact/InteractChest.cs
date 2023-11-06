@@ -9,10 +9,14 @@ public class InteractChest : MonoBehaviour, IInteract
     [SerializeField] List<GameObject> crystals = new List<GameObject>();
     bool isUsed;
     public Transform spawnPos1, spawnPos2;
-
+    Animator animator;
+    void Awake() {
+        animator = GetComponentInChildren<Animator>();
+    }
     public void Interact() {
         if (!isUsed) {
             isUsed = true;
+            animator.SetTrigger("OpenChest");
             Instantiate(crystals[Random.Range(0, crystals.Count)], spawnPos1.position, spawnPos1.rotation);
             Instantiate(crystals[Random.Range(0, crystals.Count)], spawnPos2.position, spawnPos2.rotation);
         }

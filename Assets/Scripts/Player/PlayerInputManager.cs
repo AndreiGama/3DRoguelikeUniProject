@@ -100,4 +100,8 @@ public class PlayerInputManager : MonoBehaviour {
     public bool hasPlayerInteracted() {
         return playerControls.Player.Interact.triggered;
     }
+
+    public bool hasPlayerCheckedItemsTab() {
+        return playerControls.Player.ItemTab.triggered;
+    }
 }
