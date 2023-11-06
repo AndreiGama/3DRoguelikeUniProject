@@ -46,3 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInWave: 0
   enemiesInWaveLeft: 0
+  difficultyAmplify: 0
