@@ -13,16 +13,16 @@ public enum waveTiers {
     Tier9,
     Tier10
 }
-public class WaveManager : MonoBehaviour
-{
+public class WaveManager : MonoBehaviour {
     bool isWaveCleared;
     public waveTiers waveTier;
-    [HideInInspector] public int enemiesAmount {
+    [HideInInspector]
+    public int enemiesAmount {
         get {
             switch (waveTier) {
                 case waveTiers.Tier1:
                     return 10;
-                case waveTiers.Tier2: 
+                case waveTiers.Tier2:
                     return 10;
                 case waveTiers.Tier3:
                     return 15;
@@ -45,7 +45,8 @@ public class WaveManager : MonoBehaviour
             }
         }
     }
-    [HideInInspector] public float enemyStrengthAmplifier {
+    [HideInInspector]
+    public float enemyStrengthAmplifier {
         get {
             switch (waveTier) {
                 case waveTiers.Tier1:
@@ -73,22 +74,21 @@ public class WaveManager : MonoBehaviour
             }
         }
     }
-
     GameManager gameManager;
     [SerializeField] List<Transform> spawnpoints;
-
     [SerializeField] GameObject[] enemies;
     [SerializeField] int enemiesToKill;
-
     [SerializeField] Transform enemyHolder;
+    InteractChest chest;
     private void Start() {
         gameManager = GameManager.Instance;
         enemiesToKill = enemiesAmount;
+        chest = GameObject.FindWithTag("Chest").GetComponent<InteractChest>();
     }
 
     private void OnTriggerEnter(Collider other) {
         if (other.transform.CompareTag("Player")) {
-            if(!isWaveCleared) {
+            if (!isWaveCleared) {
                 gameManager.isInWave = true;
                 StartCoroutine(SpawnEnemy());
                 StartCoroutine(CheckIfWaveCleared());
@@ -98,18 +98,19 @@ public class WaveManager : MonoBehaviour
 
     IEnumerator CheckIfWaveCleared() {
         yield return new WaitForSeconds(1f);
-        if(enemyHolder.childCount == 0 && enemiesToKill <= 0) {
+        if (enemyHolder.childCount == 0 && enemiesToKill <= 0) {
             isWaveCleared = true;
             gameManager.isInWave = false;
+            chest.canUse = true;
         }
-        if(!isWaveCleared) {
+        if (!isWaveCleared) {
             StartCoroutine(CheckIfWaveCleared());
         }
     }
 
     IEnumerator SpawnEnemy() {
         float maxSpawnRateTime;
-        if(enemyHolder.childCount >= 3) {
+        if (enemyHolder.childCount >= 3) {
             maxSpawnRateTime = 1.5f;
         } else {
             maxSpawnRateTime = 3f;
@@ -118,7 +119,7 @@ public class WaveManager : MonoBehaviour
         Transform spawnpoint = spawnpoints[Random.Range(0, spawnpoints.Count)];
         Instantiate(enemies[Random.Range(0, enemies.Length)], spawnpoint.position, spawnpoint.rotation);
         enemiesToKill--;
-        if(enemiesToKill >= 0) {
+        if (enemiesToKill >= 0) {
             StartCoroutine(SpawnEnemy());
         }
     }
