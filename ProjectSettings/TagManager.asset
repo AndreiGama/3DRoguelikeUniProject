@@ -9,6 +9,7 @@ TagManager:
   - headCollider
   - BodyCollider
   - EnemyParent
+  - Chest
   layers:
   - Default
   - TransparentFX

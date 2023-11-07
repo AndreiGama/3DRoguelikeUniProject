@@ -4,8 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
-public abstract class Item
-{
+public abstract class Item {
     public abstract string GiveName();
     public abstract string GiveDescription();
     public abstract Sprite GiveSprite();
@@ -42,11 +41,11 @@ public class HealingCrystal : Item {
     }
     public override void Update(PlayerCombatManager player, int stacks) {
         cooldown -= 1;
-        if(cooldown <= 0) {
-            player.health += 5 * stacks;
+        if (cooldown <= 0) {
+            player.Heal(5 * stacks);
             cooldown = 5;
         }
-        
+
     }
 }
 
@@ -75,12 +74,12 @@ public class PoisonCloudCrystal : Item {
         cooldown -= 1;
     }
     public override void OnPeriodicItemEvent(PlayerCombatManager player, int stacks) {
-        if(cooldown <= 0) {
+        if (cooldown <= 0) {
             PoisonCloud poisonCloudScript = poisonCloud.GetComponentInChildren<PoisonCloud>();
             poisonCloudScript.CallItem(damage * stacks, player);
             cooldown = 2;
         }
-        
+
     }
 }
 

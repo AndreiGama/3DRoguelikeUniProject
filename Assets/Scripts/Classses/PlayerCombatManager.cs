@@ -6,8 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PlayerCombatManager : CombatManager
-{
+public class PlayerCombatManager : CombatManager {
     public Camera fpsCamera;
     CharacterManager characterManager;
     PlayerInputManager inputManager;
@@ -15,21 +14,23 @@ public class PlayerCombatManager : CombatManager
     public GameObject damageNumberPrefab;
     public List<ItemList> items = new List<ItemList>();
     public Transform VFXHolder;
-    PlayerUIManager playerUIManager;
+    public PlayerUIManager UIManager;
     public float ability1Damage;
     public float ability2Damage;
     public float difficultyDamage;
-    
-    public new void Start() {
-        StartCoroutine(CallItemUpdate());
-        StartCoroutine(CallDamageOvertimeItem());
-        base.Start();
+
+    private void Awake() { // Initialising variables and references
         difficultyDamage = GameManager.Instance.difficultyAmplify;
-        Debug.Log("Initializing PlayerCombat Manager");
         inputManager = PlayerInputManager.Instance;
         characterManager = GetComponent<CharacterManager>();
         animator = GetComponent<CharacterAnimationManager>();
-        playerUIManager = GetComponent<PlayerUIManager>();
+        UIManager = GetComponent<PlayerUIManager>();
+        damageNumberPrefab = (GameObject)Resources.Load("Prefabs/DamageNumber", typeof(GameObject));
+    }
+    public new void Start() { // Initialise stats and coroutines
+        base.Start();
+        StartCoroutine(CallItemUpdate());
+        StartCoroutine(CallDamageOvertimeItem());
     }
     public void CallStatUpdateOnItemPickup() {
         foreach (ItemList i in items) {
@@ -46,17 +47,17 @@ public class PlayerCombatManager : CombatManager
 
     private void ItemTabToggle() {
         if (inputManager.hasPlayerCheckedItemsTab()) {
-            playerUIManager.CrystalTabUi();
+            UIManager.CrystalTabUi();
         }
     }
 
-    void HandleAllAttacks() {
+    void HandleAllAttacks() { // Handle inputs and respond with attacks
         //Primary Attack
         if (inputManager.hasPrimaryFireTriggered()) {
             PrimaryAttack();
         }
         //Secondary Attack
-        if(inputManager.hasSecondaryFireTriggered()) {  
+        if (inputManager.hasSecondaryFireTriggered()) {
             SecondaryAttack();
         }
         //Ability1
@@ -64,10 +65,10 @@ public class PlayerCombatManager : CombatManager
             Abillity1();
         }
         //Ability2
-        if (inputManager.hasAbility2Triggered()) { 
+        if (inputManager.hasAbility2Triggered()) {
             Abillity2();
         }
-        
+
     }
     public void PrimaryAttack() {
         if (!characterManager.isPerformingAction) {
@@ -121,7 +122,7 @@ public class PlayerCombatManager : CombatManager
         if (inputManager.hasPlayerInteracted()) {
             RaycastHit[] hits = Physics.RaycastAll(fpsCamera.transform.position, fpsCamera.transform.forward, 20f, LayerMask.GetMask("Tooltip") | LayerMask.GetMask("Default"), QueryTriggerInteraction.Collide);
             Array.Sort(hits, (hit1, hit2) => hit1.distance.CompareTo(hit2.distance));
-            
+
             foreach (RaycastHit hit in hits) {
                 IInteract interactObject = hit.collider.GetComponent<IInteract>();
                 Debug.Log("Looking for IInteractScript");
@@ -165,5 +166,5 @@ public class PlayerCombatManager : CombatManager
         }
     }
 
-    
+
 }

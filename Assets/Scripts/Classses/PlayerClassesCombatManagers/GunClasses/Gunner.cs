@@ -7,7 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class Gunner : PlayerCombatManager {
-    
+
     [SerializeField] GunWeaponData gunData;
     public float fireRate;  // Rate of fire in seconds
     float canFire;
@@ -36,8 +36,8 @@ public class Gunner : PlayerCombatManager {
     [SerializeField] GameObject dynamitePrefab;
     [SerializeField] GameObject throwingKnifePrefab;
 
-    [SerializeField] float cooldownAbility1;
-    [SerializeField] float cooldownAbility2;
+    [SerializeField] float cooldownAbility1 = 5f;
+    [SerializeField] float cooldownAbility2 = 10f;
     bool canUseAbility1 = true;
     bool canUseAbility2 = true;
     private new void Start() {
@@ -56,58 +56,62 @@ public class Gunner : PlayerCombatManager {
 
     public void WeaponFire() {
         Debug.Log("WeaponFire");
-            _recoil.recoil();
+        _recoil.recoil();
 
-            RaycastHit[] hits = Physics.RaycastAll(fpsCamera.transform.position, fpsCamera.transform.forward, maxBulletHitRange, layersToHit, QueryTriggerInteraction.Collide);
+        RaycastHit[] hits = Physics.RaycastAll(fpsCamera.transform.position, fpsCamera.transform.forward, maxBulletHitRange, layersToHit, QueryTriggerInteraction.Collide);
 
-            // Sort the hits by distance from the ray's origin in ascending order
-            Array.Sort(hits, (hit1, hit2) => hit1.distance.CompareTo(hit2.distance));
+        // Sort the hits by distance from the ray's origin in ascending order
+        Array.Sort(hits, (hit1, hit2) => hit1.distance.CompareTo(hit2.distance));
 
-            int penetratedTargets = 0; // Initialize a counter for penetrated targets
-            Transform previousHitObject = null;
+        int penetratedTargets = 0; // Initialize a counter for penetrated targets
+        Transform previousHitObject = null;
 
-            foreach (RaycastHit hit in hits) {
-                // Debug checking what objects it hit
-                Debug.Log("Hit object: " + hit.collider.gameObject.name);
+        foreach (RaycastHit hit in hits) {
+            // Debug checking what objects it hit
+            Debug.Log("Hit object: " + hit.collider.gameObject.name);
 
-                
-                Transform currentHitObject = hit.transform.root;
-                if(previousHitObject != currentHitObject) {
-                    // Grabs hit object and then grabs the damagable interface
-                    GameObject hitObject = hit.transform.gameObject;
-                    HitboxComponent hitbox = hitObject.GetComponent<HitboxComponent>();
-                    IDamagable damagable = hitbox.parentIDamagable;
-                    
-                    // If the object hit has the damagable interface then do logic
-                    if (damagable != null) {
-                        // Increase the variable which counts how many targets it penetrated so far
-                        penetratedTargets++;
-                        Debug.Log("Damageable object hit, name is:" + hitObject.name);
 
-                        // Apply damage and then create the damage text
+            Transform currentHitObject = hit.transform.root;
+            if (previousHitObject != currentHitObject) {
+                // Grabs hit object and then grabs the damagable interface
+                GameObject hitObject = hit.transform.gameObject;
+                HitboxComponent hitbox = hitObject.GetComponent<HitboxComponent>();
+                IDamagable damagable = hitbox.parentIDamagable;
 
-                        //Grab hitbox component to check where the player hit
-                        Debug.Log("Damage is being done");
-                        int dmgAmount = PrimaryDamageCalculate(basePrimaryDamage, true, hitbox.bodyPartString);
-                        damagable.doDamage(dmgAmount, true, this);
-                        
-                        CreateNumberPopUp(hitObject.transform.position, dmgAmount.ToString(), Color.white);
-                        CreateBloodSplatter(hit);
-                        previousHitObject = currentHitObject;
+                // If the object hit has the damagable interface then do logic
+                if (damagable != null) {
+                    // Increase the variable which counts how many targets it penetrated so far
+                    penetratedTargets++;
+                    Debug.Log("Damageable object hit, name is:" + hitObject.name);
 
-                        // If we've hit the maximum number of targets, break out of the loop
-                        if (penetratedTargets >= maxTargetsPenetrate) {
-                            Debug.Log("Reached max penetrated targets, breaking out of loop");
-                            break;
-                        }
+                    // Apply damage and then create the damage text
+
+                    //Grab hitbox component to check where the player hit
+                    Debug.Log("Damage is being done");
+                    int dmgAmount = PrimaryDamageCalculate(basePrimaryDamage, true, hitbox.bodyPartString);
+                    damagable.doDamage(dmgAmount, true, this);
+                    if (hitbox.bodyPartString == "Head") {
+                        CreateNumberPopUp(hitObject.transform.position, dmgAmount.ToString(), Color.yellow);
                     } else {
-                        // If the object hit has no damagable interface then continue to the next target
-                        continue;
+                        CreateNumberPopUp(hitObject.transform.position, dmgAmount.ToString(), Color.white);
                     }
+
+                    CreateBloodSplatter(hit);
+                    previousHitObject = currentHitObject;
+
+                    // If we've hit the maximum number of targets, break out of the loop
+                    if (penetratedTargets >= maxTargetsPenetrate) {
+                        Debug.Log("Reached max penetrated targets, breaking out of loop");
+                        break;
+                    }
+                } else {
+                    // If the object hit has no damagable interface then continue to the next target
+                    continue;
                 }
-                
-                
             }
+
+
+        }
     }
 
     void CreateBloodSplatter(RaycastHit hit) {
@@ -131,12 +135,13 @@ public class Gunner : PlayerCombatManager {
     }
 
     public override void SecondaryAttackLogic() {
-        StartCoroutine(SecondaryAbility());
+        StartCoroutine(SecondAttackAction());
     }
 
     public override void Abillity1Logic() {
         if (canUseAbility1) {
-            StartCoroutine(CooldownAbility(canUseAbility1, cooldownAbility1));
+            canUseAbility1 = false;
+            StartCoroutine(CooldownAbility1());
             GameObject throwKnife = Instantiate(throwingKnifePrefab, fpsCamera.transform.position, fpsCamera.transform.rotation);
             ThrowingKnife throwKnifeScript = throwKnife.GetComponentInChildren<ThrowingKnife>();
             throwKnifeScript.playerCombatManager = this;
@@ -146,7 +151,8 @@ public class Gunner : PlayerCombatManager {
 
     public override void Abillity2Logic() {
         if (canUseAbility2) {
-            StartCoroutine(CooldownAbility(canUseAbility2, cooldownAbility2));
+            canUseAbility2 = false;
+            StartCoroutine(CooldownAbility2());
             GameObject dynamite = Instantiate(dynamitePrefab, fpsCamera.transform.position, fpsCamera.transform.rotation);
             BombScript dynamiteScript = dynamite.GetComponentInChildren<BombScript>();
             dynamiteScript.playerCombatManager = this;
@@ -154,14 +160,29 @@ public class Gunner : PlayerCombatManager {
         }
 
     }
-
-    IEnumerator CooldownAbility(bool canUseAbility, float cooldown) {
-        canUseAbility = false;
-        yield return new WaitForSeconds(cooldown);
-        canUseAbility = true;
+    //Cooldowns
+    IEnumerator CooldownAbility1() {
+        yield return new WaitForSecondsRealtime(1f);
+        cooldownAbility1 -= 1f;
+        if (cooldownAbility1 >= 0) {
+            StartCoroutine(CooldownAbility1());
+        } else {
+            cooldownAbility1 = 5f;
+            canUseAbility1 = true;
+        }
+    }
+    IEnumerator CooldownAbility2() {
+        yield return new WaitForSecondsRealtime(1f);
+        cooldownAbility2 -= 1f;
+        if (cooldownAbility1 >= 0) {
+            StartCoroutine(CooldownAbility2());
+        } else {
+            cooldownAbility1 = 10f;
+            canUseAbility2 = true;
+        }
     }
 
-    IEnumerator SecondaryAbility() {
+    IEnumerator SecondAttackAction() {
         attackSpeedAmplifier += .5f;
         movementSpeed += .5f;
         abilityDamageAmplifier += .5f;

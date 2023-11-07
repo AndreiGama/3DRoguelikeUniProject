@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ThrowingKnife : MonoBehaviour
-{
+public class ThrowingKnife : MonoBehaviour {
     public PlayerCombatManager playerCombatManager;
     private void OnTriggerEnter(Collider other) {
-        if(other != null) {
+        if (other != null) {
             IDamagable damagable = other.transform.GetComponentInParent<IDamagable>();
             HitboxComponent hitPoint = other.transform.GetComponent<HitboxComponent>();
             if (damagable != null) {
@@ -16,7 +15,7 @@ public class ThrowingKnife : MonoBehaviour
                 Destroy(transform.parent.gameObject);
             }
         }
-            
+
     }
     private void OnCollisionEnter(Collision collision) {
         if (!collision.gameObject.layer.Equals(LayerMask.GetMask("Player"))) {

@@ -59,9 +59,9 @@ public class CombatManager : MonoBehaviour, IDamagable {
         maxHealth = baseMaxHealth * armorAmplifier;
     }
     bool IsHitHeadshot(string ColliderShot) {
-        if(ColliderShot == "Head") {
+        if (ColliderShot == "Head") {
             return true;
-        } else if(ColliderShot == "Body") {
+        } else if (ColliderShot == "Body") {
             return false;
         } else {
             Debug.Log("Body part not found, returning false");
@@ -69,7 +69,7 @@ public class CombatManager : MonoBehaviour, IDamagable {
         }
     }
     public int AbilityDamageCalculate(float AbilityDamage, bool canHeadshot = false, string HitBodypartName = "") {
-        if(canHeadshot) {
+        if (canHeadshot) {
             if (IsHitHeadshot(HitBodypartName)) {
                 return Mathf.FloorToInt((AbilityDamage * critDamageAmplifier) * abilityDamageAmplifier);
             } else {
@@ -78,7 +78,7 @@ public class CombatManager : MonoBehaviour, IDamagable {
         } else {
             return Mathf.FloorToInt(AbilityDamage * abilityDamageAmplifier);
         }
-        
+
     }
 
     public int PrimaryDamageCalculate(float BaseDamage, bool canHeadshot = false, string HitBodypartName = "") {
@@ -91,7 +91,7 @@ public class CombatManager : MonoBehaviour, IDamagable {
         } else {
             return Mathf.FloorToInt(BaseDamage * primaryDamageAmplifier);
         }
-        
+
     }
 
     public void Heal(int healthToAdd) {
@@ -109,7 +109,6 @@ public class CombatManager : MonoBehaviour, IDamagable {
         baseArmor = characterStats.armor;
         baseMovementSpeed = characterStats.movementSpeed;
         baseShield = characterStats.shield;
-
         health = baseHealth;
         armor = baseArmor;
         movementSpeed = baseMovementSpeed;
@@ -118,12 +117,10 @@ public class CombatManager : MonoBehaviour, IDamagable {
     public void doDamage(int dmgAmount, bool isPlayer, PlayerCombatManager player) {
         if (baseShield > 0) {
             baseShield -= dmgAmount;
-
             // Check if there's still damage left after the shield is depleted
             if (baseShield < 0) {
                 float remainingDamage = Mathf.Abs(baseShield);
                 baseShield = 0;
-
                 // Deduct the remaining damage from the health
                 health -= remainingDamage;
             }
@@ -132,11 +129,14 @@ public class CombatManager : MonoBehaviour, IDamagable {
             health -= dmgAmount;
         }
         if (isPlayer) {
-            player.OnKillItemEffect();
+            if (health <= 0) {
+                player.OnKillItemEffect();
+                player.UIManager.IncreaseScore(10);
+            }
         }
     }
     public void die() {
-        if(health <= 0) {
+        if (health <= 0) {
             Debug.Log("Die");
             Destroy(gameObject);
         }
