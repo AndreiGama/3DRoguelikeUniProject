@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class PlayerCombatManager : CombatManager {
@@ -166,5 +167,9 @@ public class PlayerCombatManager : CombatManager {
         }
     }
 
-
+    void Die() {
+        if(health <= 0) {
+            SceneManager.LoadScene("DeathScene");
+        }
+    }
 }

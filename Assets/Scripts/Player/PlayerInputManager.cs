@@ -25,30 +25,26 @@ public class PlayerInputManager : MonoBehaviour {
             playerControls = new PlayerControls();
         }
     }
-    // REMINDER TO ACTUALLY FUCKING PUT REAL SCENE INDEXES AND RENABLE THE ONSCENECHANGE FUNCTION
-    // REMINDER TO ACTUALLY FUCKING PUT REAL SCENE INDEXES AND RENABLE THE ONSCENECHANGE FUNCTION
-    // REMINDER TO ACTUALLY FUCKING PUT REAL SCENE INDEXES AND RENABLE THE ONSCENECHANGE FUNCTION
-    // REMINDER TO ACTUALLY FUCKING PUT REAL SCENE INDEXES AND RENABLE THE ONSCENECHANGE FUNCTION
 
     private void Start() {
         DontDestroyOnLoad(gameObject);
-        //SceneManager.activeSceneChanged += OnSceneChange;
-        //_instance.enabled = false;
+        SceneManager.activeSceneChanged += OnSceneChange;
+        _instance.enabled = false;
     }
 
-    //private void OnSceneChange(Scene oldScene, Scene newScene) {
-    //    // When we are loading into any of the playable levels, enable our player controls
-    //    foreach(int i in WorldSaveGameManager.instance.GetWorldSceneIndex()) {
-    //        if (newScene.buildIndex == i) {
-    //            _instance.enabled = true;
-    //        }
-    //    // Otherwise we must be at the main menu, disable player controls
-    //    else {
-    //            _instance.enabled = false;
-    //        }
-    //    }
-        
-    //}
+    private void OnSceneChange(Scene oldScene, Scene newScene) {
+        // When we are loading into any of the playable levels, enable our player controls
+        foreach (int i in WorldSaveGameManager.instance.GetWorldSceneIndex()) {
+            if (newScene.buildIndex == i) {
+                _instance.enabled = true;
+            }
+        // Otherwise we must be at the main menu, disable player controls
+        else {
+                _instance.enabled = false;
+            }
+        }
+
+    }
 
     private void OnEnable() {
         

@@ -135,7 +135,7 @@ public class CombatManager : MonoBehaviour, IDamagable {
             }
         }
     }
-    public void die() {
+    private void die() {
         if (health <= 0) {
             Debug.Log("Die");
             Destroy(gameObject);
