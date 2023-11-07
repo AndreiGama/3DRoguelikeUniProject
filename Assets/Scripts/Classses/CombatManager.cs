@@ -41,9 +41,8 @@ public class CombatManager : MonoBehaviour, IDamagable {
     public float armorAmplifier = 1f;
     public float healthAmplifier = 1f;
     public float critDamageAmplifier = 1.5f;
-
-    Transform Player;
     public void Start() {
+        
         Debug.Log("Initializing Stats");
         LoadBaseStats();
         LoadWeaponStats();
@@ -132,16 +131,9 @@ public class CombatManager : MonoBehaviour, IDamagable {
             if (health <= 0) {
                 player.OnKillItemEffect();
                 player.UIManager.IncreaseScore(10);
+                GameManager.Instance.Score += 10f;
+                Destroy(gameObject);
             }
         }
-    }
-    private void die() {
-        if (health <= 0) {
-            Debug.Log("Die");
-            Destroy(gameObject);
-        }
-    }
-    public void Update() {
-        die();
     }
 }

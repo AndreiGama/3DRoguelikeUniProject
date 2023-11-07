@@ -32,6 +32,8 @@ public class MainMenuUI : MonoBehaviour
         b_BackToMM = root.Q<Button>("B_BackMM");
     }
     private void Start() {
+        UnityEngine.Cursor.lockState = CursorLockMode.Confined;
+        UnityEngine.Cursor.visible = true;
         b_PlaySettings.clicked += () => ShowDifficultyScreen();
         b_Quit.clicked += () => Application.Quit();
         b_Easy.clicked += () => EasyDifficulty();

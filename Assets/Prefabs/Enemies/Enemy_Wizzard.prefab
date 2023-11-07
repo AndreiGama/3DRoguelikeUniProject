@@ -1213,7 +1213,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
   TargetTag: Player
-  knockback: 0
 --- !u!195 &3161976597588473049
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1251,6 +1250,7 @@ MonoBehaviour:
   oneshot: {fileID: 0}
   navigator: {fileID: 0}
   currentState: {fileID: 1690871059267997700}
+  wizzard: 1
 --- !u!1 &3753254205470208039
 GameObject:
   m_ObjectHideFlags: 0

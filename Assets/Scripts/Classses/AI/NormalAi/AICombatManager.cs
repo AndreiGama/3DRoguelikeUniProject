@@ -29,4 +29,11 @@ public class AICombatManager : CombatManager
     public void Attack(IDamagable target) {
         target.doDamage(PrimaryDamageCalculate(basePrimaryDamage), false);
     }
+
+    public void LookAt() {
+        GameObject player = GameObject.FindWithTag("Player");
+        Vector3 direction = player.transform.position - transform.position;
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        transform.rotation = rotation;
+    }
 }

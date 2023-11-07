@@ -11,8 +11,11 @@ public class UI_Death : MonoBehaviour {
     Button b_BackToMainMenu;
     Button b_Quit;
     Label l_Score;
-
+    GameManager manager;
     private void Start() {
+        manager = GameManager.Instance;
+        UnityEngine.Cursor.lockState = CursorLockMode.Confined;
+        UnityEngine.Cursor.visible = true;
         doc = GetComponent<UIDocument>();
         root = doc.rootVisualElement;
         b_Retry = root.Q<Button>("B_Retry");
@@ -22,6 +25,6 @@ public class UI_Death : MonoBehaviour {
         b_Retry.clicked += () => SceneManager.LoadScene("PlayerLevel");
         b_BackToMainMenu.clicked += () => SceneManager.LoadScene("MainMenuScene");
         b_Quit.clicked += () => Application.Quit();
-        l_Score.text = "Score: " + GameManager.Instance.Score.ToString();
+        l_Score.text = "Score: " + manager.Score.ToString();
     }
 }

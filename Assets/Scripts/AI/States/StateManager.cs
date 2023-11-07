@@ -9,6 +9,8 @@ public class StateManager : MonoBehaviour {
     [HideInInspector] public AINavigator navigator;
     AICharacterManager character;
     public State currentState;
+    AICombatManager combatManager;
+    [SerializeField] bool wizzard;
     private void Awake() {
         currentState.enabled = true;
     }
@@ -16,6 +18,7 @@ public class StateManager : MonoBehaviour {
         navigator = GetComponentInParent<AINavigator>();
         oneshot = GetComponentInParent<AIAnimationPlayer>();
         character = GetComponent<AICharacterManager>();
+        combatManager = GetComponentInParent<AICombatManager>();
     }
     void Update()
     {
@@ -46,6 +49,9 @@ public class StateManager : MonoBehaviour {
     }
     void Attack() {
         navigator.Stop();
+        if (wizzard) {
+            combatManager.LookAt();
+        }
         if(!character.isPerformingAction) {
             oneshot.PlayTargetActionAnimation("Attack", 1.5f);
         }

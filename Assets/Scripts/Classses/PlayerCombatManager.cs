@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -30,6 +31,7 @@ public class PlayerCombatManager : CombatManager {
     }
     public new void Start() { // Initialise stats and coroutines
         base.Start();
+        GameManager.Instance.Score = 0;
         StartCoroutine(CallItemUpdate());
         StartCoroutine(CallDamageOvertimeItem());
     }
@@ -44,6 +46,7 @@ public class PlayerCombatManager : CombatManager {
         HandleAllAttacks();
         Interact();
         ItemTabToggle();
+        Die();
     }
 
     private void ItemTabToggle() {
@@ -166,7 +169,6 @@ public class PlayerCombatManager : CombatManager {
             i.item.CreateVFX(VFXHolder);
         }
     }
-
     void Die() {
         if(health <= 0) {
             SceneManager.LoadScene("DeathScene");

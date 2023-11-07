@@ -12,8 +12,11 @@ public class UI_FinishedLevelScript : MonoBehaviour
     Button b_BackToMainMenu;
     Button b_Quit;
     Label l_Score;
-
+    GameManager manager;
     private void Start() {
+        manager = GameManager.Instance;
+        UnityEngine.Cursor.lockState = CursorLockMode.Confined;
+        UnityEngine.Cursor.visible = true;
         doc = GetComponent<UIDocument>();
         root = doc.rootVisualElement;
         b_PlayAgain = root.Q<Button>("B_PlayAgain");
@@ -23,6 +26,6 @@ public class UI_FinishedLevelScript : MonoBehaviour
         b_PlayAgain.clicked += () => SceneManager.LoadScene("PlayerLevel");
         b_BackToMainMenu.clicked += () => SceneManager.LoadScene("MainMenuScene");
         b_Quit.clicked += () => Application.Quit();
-        l_Score.text = "Score: " + GameManager.Instance.Score.ToString();
+        l_Score.text = "Score: " + manager.Score.ToString();
     }
 }
