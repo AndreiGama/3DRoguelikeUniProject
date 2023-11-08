@@ -9,9 +9,8 @@ public class AICombatManager : CombatManager
     [SerializeField] AIWeaponData AIWeaponData;
     [SerializeField] public WeaponHitboxComponent meleeHitbox = null;
     bool isMeleeHitboxActive;
-    private new void Start() {
-        base.Start();
-    }
+    [SerializeField] GameObject projectilePrefab;
+    [SerializeField] Transform projectileSpawnpoint;
     public override void LoadWeaponStats() {
         weaponName = AIWeaponData.weaponName;
         AttackRange = AIWeaponData.attackRange;
@@ -35,5 +34,11 @@ public class AICombatManager : CombatManager
         Vector3 direction = player.transform.position - transform.position;
         Quaternion rotation = Quaternion.LookRotation(direction);
         transform.rotation = rotation;
+    }
+
+    public void SpawnProjectile() {
+        GameObject projectile = Instantiate(projectilePrefab, projectileSpawnpoint.position, transform.rotation);
+        WeaponHitboxComponent projectileScript = projectile.GetComponent<WeaponHitboxComponent>();
+        projectileScript.combatManager = this;
     }
 }

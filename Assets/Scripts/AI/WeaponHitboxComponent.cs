@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class WeaponHitboxComponent : MonoBehaviour
 {
-    AICombatManager combatManager;
+    public AICombatManager combatManager;
     Transform UniqueTarget = null;
+    [SerializeField] bool isProjectile = false;
     private void Awake() {
-        combatManager = GetComponentInParent<AICombatManager>();
+        if(combatManager == null) {
+            combatManager = GetComponentInParent<AICombatManager>();
+        }
     }
     private void OnDisable() {
         UniqueTarget = null;
@@ -18,8 +21,10 @@ public class WeaponHitboxComponent : MonoBehaviour
                 IDamagable damagable = other.GetComponent<IDamagable>();
                 combatManager.Attack(damagable);
                 UniqueTarget = other.transform.root;
+                if(isProjectile) {
+                    Destroy(this.gameObject);
+                }
             }
-            
         }
     }
 }

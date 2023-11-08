@@ -14,11 +14,10 @@ public class AINavigator : MonoBehaviour
 
     private void Start() {
         agent = GetComponent<NavMeshAgent>();
-
         target = GameObject.FindWithTag(TargetTag);
         targetTransform = target.transform;
         OwnerAttackRange = GetComponent<AICombatManager>().AttackRange;
-        Debug.Log(OwnerAttackRange);
+        agent.speed = GetComponent<AICombatManager>().movementSpeed;
     }
     public void Move() {
             agent.isStopped = false;

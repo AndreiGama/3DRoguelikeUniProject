@@ -28,6 +28,7 @@ public class PlayerCombatManager : CombatManager {
         animator = GetComponent<CharacterAnimationManager>();
         UIManager = GetComponent<PlayerUIManager>();
         damageNumberPrefab = (GameObject)Resources.Load("Prefabs/DamageNumber", typeof(GameObject));
+        GameManager.Instance.isInWave = false;
     }
     public new void Start() { // Initialise stats and coroutines
         base.Start();
@@ -41,8 +42,7 @@ public class PlayerCombatManager : CombatManager {
         }
     }
 
-    private new void Update() {
-        // base.Update();
+    private void Update() {
         HandleAllAttacks();
         Interact();
         ItemTabToggle();
