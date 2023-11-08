@@ -133,7 +133,7 @@ public class PowerCrystal : Item {
         return (Sprite)Resources.Load("Sprites/Crystal_Power", typeof(Sprite));
     }
     public override void OnStatChange(PlayerCombatManager player, int stacks) {
-        player.abilityDamageAmplifier = player.baseAplifierValue + stacks / 10f;
+        player.primaryDamageAmplifier = player.baseAplifierValue + stacks / 10f;
         player.abilityDamageAmplifier = player.baseAplifierValue + stacks / 10f;
     }
 }
