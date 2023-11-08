@@ -37,7 +37,8 @@ public class AICombatManager : CombatManager
     }
 
     public void SpawnProjectile() {
-        GameObject projectile = Instantiate(projectilePrefab, projectileSpawnpoint.position, transform.rotation);
+        GameObject player = GameObject.FindWithTag("Player");
+        GameObject projectile = Instantiate(projectilePrefab, projectileSpawnpoint.position, Quaternion.LookRotation(player.transform.position - projectileSpawnpoint.transform.position) );
         WeaponHitboxComponent projectileScript = projectile.GetComponent<WeaponHitboxComponent>();
         projectileScript.combatManager = this;
     }

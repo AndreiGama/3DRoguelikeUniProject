@@ -94,7 +94,8 @@ public class CombatManager : MonoBehaviour, IDamagable {
     }
 
     public void Heal(int healthToAdd) {
-        health = Mathf.Clamp(healthToAdd, 1, maxHealth);
+        health += healthToAdd;
+        health = Mathf.Clamp(health, 0, maxHealth);
     }
     public virtual void LoadWeaponStats() {
         weaponName = weaponData.weaponName;

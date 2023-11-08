@@ -38,8 +38,10 @@ public class Gunner : PlayerCombatManager {
 
     [SerializeField] float cooldownAbility1 = 5f;
     [SerializeField] float cooldownAbility2 = 10f;
+    [SerializeField] float cooldownSecondaryAbility = 20f;
     bool canUseAbility1 = true;
     bool canUseAbility2 = true;
+    bool canUseSecondaryAbility = true;
     private new void Start() {
         base.Start();
         fireRate = gunData.fireRate;
@@ -135,7 +137,9 @@ public class Gunner : PlayerCombatManager {
     }
 
     public override void SecondaryAttackLogic() {
-        StartCoroutine(SecondAttackAction());
+        if (canUseSecondaryAbility) {
+            StartCoroutine(SecondAttackAction());
+        }
     }
 
     public override void Abillity1Logic() {
@@ -181,13 +185,24 @@ public class Gunner : PlayerCombatManager {
             canUseAbility2 = true;
         }
     }
-
+    IEnumerator CooldownAbilitySecondaryAbility() {
+        yield return new WaitForSecondsRealtime(1f);
+        cooldownSecondaryAbility -= 1f;
+        if (cooldownSecondaryAbility >= 0) {
+            StartCoroutine(CooldownAbilitySecondaryAbility());
+        } else {
+            canUseSecondaryAbility = true;
+            cooldownSecondaryAbility = 20f;
+        }
+    }
     IEnumerator SecondAttackAction() {
+        canUseSecondaryAbility = false;
+        StartCoroutine(CooldownAbilitySecondaryAbility());
         attackSpeedAmplifier += .5f;
         movementSpeed += .5f;
         abilityDamageAmplifier += .5f;
         primaryDamageAmplifier += .5f;
-        yield return new WaitForSeconds(15f);
+        yield return new WaitForSeconds(5f);
         attackSpeedAmplifier -= .5f;
         movementSpeed -= .5f;
         abilityDamageAmplifier -= .5f;

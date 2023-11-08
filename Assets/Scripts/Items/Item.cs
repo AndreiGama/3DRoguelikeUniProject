@@ -139,7 +139,7 @@ public class PowerCrystal : Item {
 }
 
 public class RejuvenateCrystal : Item {
-    int healthPerKill;
+    int healthPerKill= 5;
     public override string GiveName() {
         return "Crystal of rejuvenation";
     }
