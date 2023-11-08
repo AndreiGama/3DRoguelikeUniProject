@@ -174,10 +174,10 @@ public class Gunner : PlayerCombatManager {
     IEnumerator CooldownAbility2() {
         yield return new WaitForSecondsRealtime(1f);
         cooldownAbility2 -= 1f;
-        if (cooldownAbility1 >= 0) {
+        if (cooldownAbility2 >= 0) {
             StartCoroutine(CooldownAbility2());
         } else {
-            cooldownAbility1 = 10f;
+            cooldownAbility2 = 10f;
             canUseAbility2 = true;
         }
     }
