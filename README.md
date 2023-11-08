@@ -30,4 +30,5 @@ Biblography:
         Setting UI element width by size % (no date) Unity Forum. Available at: https://forum.unity.com/threads/set-style-width-using-percentage.984149/ (Accessed: 08 November 2023). 
         Used this to learn how to make my wizzard rotate towards the player and the projectile. (2017) YouTube. Available at: https://www.youtube.com/watch?v=nJiFitClnKo (Accessed: 08 November 2023). 
         Wizardus Maximus - free model by madtrollstudio (no date) Free 3D Model By madtrollstudio - Poly Pizza. Available at: https://poly.pizza/m/6oDxK0wqyL (Accessed: 08 November 2023). 
-    
+        Dynamite,Throwing Knife, hand model, gun, chest and crystals were all designed and created by me in blender.
+        The rooms were also created by me with probuilder in unity.
